@@ -1,0 +1,6 @@
+@sigma_backend_HostAddress = http://localhost:5294
+
+GET {{sigma_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
