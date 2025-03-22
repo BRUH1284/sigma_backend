@@ -3,6 +3,8 @@ using sigma_backend.Data;
 using sigma_backend.Repositories;
 using sigma_backend.Services;
 using DotNetEnv;
+using sigma_backend.Entities;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,16 @@ Env.Load();
 // Configure PostgreSQL database
 string? connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+
+// Authorization
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication()//.AddCookie(IdentityConstants.ApplicationScheme)
+    .AddBearerToken(IdentityConstants.BearerScheme);
+
+// User Identity
+builder.Services.AddIdentityCore<User>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddApiEndpoints();
 
 // Register repositories and services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -36,6 +48,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapIdentityApi<User>();
 
 app.Run();

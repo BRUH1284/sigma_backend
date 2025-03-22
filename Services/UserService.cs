@@ -19,7 +19,7 @@ namespace sigma_backend.Services
             // Convert each user entity into a UserResponseDto and return the list
             return users.Select(u => new UserResponseDto
             {
-                Id = u.Id//...
+                UserName = u.UserName ?? "null"
             });
         }
         private async Task<User> GetUserById(int id)
@@ -40,9 +40,7 @@ namespace sigma_backend.Services
             // Convert entity to DTO and return it
             return new UserResponseDto
             {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email
+                UserName = user.UserName
             };
         }
 
@@ -52,7 +50,7 @@ namespace sigma_backend.Services
             // Convert DTO to entity
             var user = new User
             {
-                Username = userDto.Username//.. no id
+                UserName = userDto.UserName//.. no id
             };
 
             // Add the new user to the database
@@ -65,7 +63,7 @@ namespace sigma_backend.Services
             var user = await GetUserById(id);
 
             // Update user fields with new values from DTO
-            user.Username = userDto.Username;
+            user.UserName = userDto.UserName;
 
             // Save the updated user in the database
             await _userRepository.UpdateAsync(user);

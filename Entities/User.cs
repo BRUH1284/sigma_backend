@@ -1,9 +1,9 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace sigma_backend.Entities
 {
-    public class User
+    public class User : IdentityUser
     {
-        public int Id { get; set; }
-        public string Email { get; set; }
-        public string Username { get; set; }
+        //public string Username { get; set; }
     }
 }
