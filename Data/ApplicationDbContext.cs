@@ -1,23 +1,34 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using sigma_backend.Entities;
+using sigma_backend.Models;
 
 namespace sigma_backend.Data
 {
+    // Bridge between application and the PostgreSQL database. It holds DbSet properties that represent tables in the database.
     public class ApplicationDbContext : IdentityDbContext<User>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions options) : base(options)
+        {
+
+        }
         // Represent tables in Db
-        public DbSet<User> Users { get; set; }
+        public DbSet<Activity> Activities { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
 
-        // protected override void OnModelCreating(ModelBuilder builder)
-        // {
-        //     base.OnModelCreating(builder);
-
-        //     builder.Entity<User>()
-        //         .Property(u => u.Username).HasMaxLength(32); // Limit username length
-
-        //     builder.HasDefaultSchema("sigmadb");
-        // }
+            List<IdentityRole> roles = new List<IdentityRole>{
+                new IdentityRole{
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole{
+                    Name = "User",
+                    NormalizedName = "USER"
+                }
+            };
+            builder.Entity<IdentityRole>().HasData(roles);
+        }
     }
 }
