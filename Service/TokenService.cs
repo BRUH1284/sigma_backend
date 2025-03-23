@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using sigma_backend.Interfaces;
 using sigma_backend.Models;
@@ -13,13 +9,11 @@ namespace sigma_backend.Service
 {
     public class TokenService : ITokenService
     {
-        private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
 
-        public TokenService(IConfiguration config)
+        public TokenService()
         {
-            _config = config;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SIGNING_KEY")));
         }
         public string CreateToken(User user, IList<string> roles)
         {
@@ -41,8 +35,8 @@ namespace sigma_backend.Service
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(7),
                 SigningCredentials = credentials,
-                Issuer = _config["JWT:Issuer"],
-                Audience = _config["JWT:Audience"]
+                Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
