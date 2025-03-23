@@ -26,6 +26,9 @@ bld/
 # Enviroment Variables
 .env
 
+# Publish
+publish/
+
 # .NET Core
 project.lock.json
 project.fragment.lock.json
