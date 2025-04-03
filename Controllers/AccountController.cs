@@ -41,11 +41,11 @@ namespace sigma_backend.Controllers
 
                 var createdUser = await userManager.CreateAsync(user, registerDto.Password);
                 if (!createdUser.Succeeded)
-                    return StatusCode(500, createdUser.Errors);
+                    return BadRequest(createdUser.Errors);
                 // Add role
                 var roleResult = await userManager.AddToRoleAsync(user, "User");
                 if (!roleResult.Succeeded)
-                    return StatusCode(500, roleResult.Errors);
+                    return BadRequest(roleResult.Errors);
                 // Retrieve role after adding
                 var roles = await userManager.GetRolesAsync(user);
 
