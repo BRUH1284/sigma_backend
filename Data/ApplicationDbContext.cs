@@ -13,11 +13,13 @@ namespace sigma_backend.Data
 
         }
         // Represent tables in Db
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Activity> Activities { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            // Create roles
             List<IdentityRole> roles = new List<IdentityRole>{
                 new IdentityRole{
                     Name = "Admin",

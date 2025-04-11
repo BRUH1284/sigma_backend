@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace sigma_backend.DataTransferObjects
 {
     public class CreateActivityRequestDto
     {
-        public String Name { get; set; }
-        public int KcalPerHour { get; set; }
+        [Required]
+        public required string Name { get; set; }
+        [Required]
+        public required int KcalPerHour { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace sigma_backend.Repository
 
         public async Task<Activity?> DeleteAsync(int id)
         {
-            var activityModel = await _context.Activities.FirstOrDefaultAsync(x => x.Id == id);
+            var activityModel = await _context.Activities.FindAsync(id);
 
             if (activityModel == null)
             {
@@ -47,7 +47,7 @@ namespace sigma_backend.Repository
 
         public async Task<Activity?> UpdateAsync(int id, UpdateActivityRequestDto activityDto)
         {
-            var existingActivity = await _context.Activities.FirstOrDefaultAsync(x => x.Id == id);
+            var existingActivity = await _context.Activities.FindAsync(activityDto.Id);
 
             if (existingActivity == null)
             {
