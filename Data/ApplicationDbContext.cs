@@ -15,6 +15,14 @@ namespace sigma_backend.Data
         // Represent tables in Db
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<Meal> Meals { get; set; }
+        public DbSet<MealFile> MealFiles { get; set; }
+        public DbSet<FoodNutrition> FoodNutrition { get; set; }
+        public DbSet<CustomFood> CustomFoods { get; set; }
+        public DbSet<CustomDish> CustomDishes { get; set; }
+        public DbSet<CustomDishIngredient> CustomDishIngredients { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

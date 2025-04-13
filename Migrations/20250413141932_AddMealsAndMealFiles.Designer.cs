@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using sigma_backend.Data;
@@ -11,9 +12,11 @@ using sigma_backend.Data;
 namespace sigma_backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413141932_AddMealsAndMealFiles")]
+    partial class AddMealsAndMealFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,13 @@ namespace sigma_backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "24232a52-0bb3-4f55-9f5b-5d951ea4db9a",
+                            Id = "c2e4a8aa-3bb4-471c-ab3e-69046839cb61",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a6096734-65be-4295-beb9-412ce6970648",
+                            Id = "986d6b09-5519-45a4-a70f-a0542a60bf64",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -191,92 +194,6 @@ namespace sigma_backend.Migrations
                     b.ToTable("Activities");
                 });
 
-            modelBuilder.Entity("sigma_backend.Models.CustomDish", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CustomDishes");
-                });
-
-            modelBuilder.Entity("sigma_backend.Models.CustomDishIngredient", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("AmountInGrams")
-                        .HasColumnType("double precision");
-
-                    b.Property<int>("CustomDishId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("FoodId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomDishId");
-
-                    b.HasIndex("FoodId");
-
-                    b.ToTable("CustomDishIngredients");
-                });
-
-            modelBuilder.Entity("sigma_backend.Models.CustomFood", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<float>("CaloricValue")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Carbohydrates")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<float>("Fat")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Food")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<float>("Protein")
-                        .HasColumnType("real");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CustomFoods");
-                });
-
             modelBuilder.Entity("sigma_backend.Models.FoodNutrition", b =>
                 {
                     b.Property<int>("Id")
@@ -297,7 +214,7 @@ namespace sigma_backend.Migrations
                     b.Property<float>("Cholesterol")
                         .HasColumnType("real");
 
-                    b.Property<string>("Column0")
+                    b.Property<string>("ColumnN0")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -605,25 +522,6 @@ namespace sigma_backend.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("sigma_backend.Models.CustomDishIngredient", b =>
-                {
-                    b.HasOne("sigma_backend.Models.CustomDish", "CustomDish")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("CustomDishId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("sigma_backend.Models.FoodNutrition", "Food")
-                        .WithMany()
-                        .HasForeignKey("FoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CustomDish");
-
-                    b.Navigation("Food");
-                });
-
             modelBuilder.Entity("sigma_backend.Models.Meal", b =>
                 {
                     b.HasOne("sigma_backend.Models.FoodNutrition", "Food")
@@ -652,11 +550,6 @@ namespace sigma_backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Meal");
-                });
-
-            modelBuilder.Entity("sigma_backend.Models.CustomDish", b =>
-                {
-                    b.Navigation("Ingredients");
                 });
 #pragma warning restore 612, 618
         }
