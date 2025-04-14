@@ -73,29 +73,6 @@ namespace sigma_backend.Migrations
                     table.PrimaryKey("PK_FoodNutrition", x => x.Id);
                 });
 
-                // Копируем данные из food_nutrition_temp в FoodNutrition
-            migrationBuilder.Sql(
-                @"INSERT INTO ""FoodNutrition"" (
-                    ""Column0"", ""Unnamed0"", ""Food"", ""CaloricValue"", ""Fat"", ""SaturatedFats"", 
-                    ""MonounsaturatedFats"", ""PolyunsaturatedFats"", ""Carbohydrates"", ""Sugars"", 
-                    ""Protein"", ""DietaryFiber"", ""Cholesterol"", ""Sodium"", ""Water"", 
-                    ""VitaminA"", ""VitaminB1"", ""VitaminB11"", ""VitaminB12"", ""VitaminB2"", ""VitaminB3"", 
-                    ""VitaminB5"", ""VitaminB6"", ""VitaminC"", ""VitaminD"", ""VitaminE"", 
-                    ""VitaminK"", ""Calcium"", ""Copper"", ""Iron"", ""Magnesium"", 
-                    ""Manganese"", ""Phosphorus"", ""Potassium"", ""Selenium"", ""Zinc"", 
-                    ""NutritionDensity""
-                )
-                SELECT 
-                    ""column0"", ""unnamed_0"", ""food"", ""caloric_value"", ""fat"", ""saturated_fats"", 
-                    ""monounsaturated_fats"", ""polyunsaturated_fats"", ""carbohydrates"", ""sugars"", 
-                    ""protein"", ""dietary_fiber"", ""cholesterol"", ""sodium"", ""water"", 
-                    ""vitamin_a"", ""vitamin_b1"", ""vitamin_b11"", ""vitamin_b12"", ""vitamin_b2"", ""vitamin_b3"", 
-                    ""vitamin_b5"", ""vitamin_b6"", ""vitamin_c"", ""vitamin_d"", ""vitamin_e"", 
-                    ""vitamin_k"", ""calcium"", ""copper"", ""iron"", ""magnesium"", 
-                    ""manganese"", ""phosphorus"", ""potassium"", ""selenium"", ""zinc"", 
-                    ""nutrition_density""
-                FROM food_nutrition;");
-
             migrationBuilder.CreateTable(
                 name: "Meals",
                 columns: table => new

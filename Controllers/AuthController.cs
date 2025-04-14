@@ -16,13 +16,23 @@ namespace sigma_backend.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ITokenService _tokenService;
+        private readonly IUserProfileRepository _profileRepo;
         private readonly IRefreshTokenRepository _refreshTokenRepo;
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, ITokenService tokenService, IRefreshTokenRepository refreshTokenRepo)
+        private readonly ICurrentUserService _currentUserService;
+        public AuthController(
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            ITokenService tokenService,
+            IRefreshTokenRepository refreshTokenRepo,
+            IUserProfileRepository profileRepo,
+            ICurrentUserService currentUserService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
+            _profileRepo = profileRepo;
             _refreshTokenRepo = refreshTokenRepo;
+            _currentUserService = currentUserService;
         }
 
         [HttpPost("register")]
@@ -37,7 +47,9 @@ namespace sigma_backend.Controllers
                 var user = new User
                 {
                     UserName = registerDto.UserName,
-                    Email = registerDto.Email
+                    Email = registerDto.Email,
+                    FirstName = registerDto.FirstName,
+                    LastName = registerDto.LastName
                 };
                 // Save new user
                 var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
@@ -48,6 +60,18 @@ namespace sigma_backend.Controllers
                 var roleResult = await _userManager.AddToRoleAsync(user, "User");
                 if (!roleResult.Succeeded)
                     return BadRequest(roleResult.Errors);
+
+                // Create a default profile
+                var profile = new UserProfile
+                {
+                    UserId = user.Id,
+                    Bio = $"Welcome to {user.UserName}'s profile!",
+                    // Default image
+                };
+
+                // Save new profile
+                await _profileRepo.CreateAsync(profile);
+
                 // Retrieve roles
                 var roles = await _userManager.GetRolesAsync(user);
 
@@ -89,7 +113,7 @@ namespace sigma_backend.Controllers
         public async Task<IActionResult> Logout([FromBody] LogoutDto dto)
         {
             // Find user in DB
-            var user = await GetCurrentUserAsync();
+            var user = await _currentUserService.GetCurrentUserAsync(User);
             if (user == null) return Unauthorized("User not found");
 
             // Delete refresh token
@@ -106,7 +130,7 @@ namespace sigma_backend.Controllers
         public async Task<IActionResult> LogoutAll()
         {
             // Find user in DB
-            var user = await GetCurrentUserAsync();
+            var user = await _currentUserService.GetCurrentUserAsync(User);
             if (user == null) return Unauthorized("User not found");
 
             // Delete all refresh tokens for this user
@@ -163,13 +187,6 @@ namespace sigma_backend.Controllers
                 AccessToken = accessToken,
                 RefreshToken = refreshTokenString
             };
-        }
-        private async Task<User?> GetCurrentUserAsync()
-        {
-            var userName = User?.Identity?.Name;
-            if (string.IsNullOrEmpty(userName)) return null;
-
-            return await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == userName);
         }
     }
 }

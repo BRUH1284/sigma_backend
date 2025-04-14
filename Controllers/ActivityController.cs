@@ -18,7 +18,6 @@ namespace sigma_backend.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var activities = await _activityRepo.GetAllAsync();
@@ -41,7 +40,7 @@ namespace sigma_backend.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateActivityRequestDto activityDto)
         {
             var activityModel = activityDto.ToActivityFromCreateDto();

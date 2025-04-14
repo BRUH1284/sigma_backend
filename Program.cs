@@ -6,7 +6,6 @@ using sigma_backend.Repository;
 using sigma_backend.Models;
 using Microsoft.AspNetCore.Identity;
 using sigma_backend.Service;
-using Microsoft.OpenApi.Models;
 using sigma_backend.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,8 +36,11 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 var app = builder.Build();
 

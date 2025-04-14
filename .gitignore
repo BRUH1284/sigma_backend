@@ -26,6 +26,8 @@ bld/
 # Enviroment Variables
 .env
 
+wwwroot/
+
 # Publish
 publish/
 

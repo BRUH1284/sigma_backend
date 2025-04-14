@@ -146,7 +146,7 @@ namespace sigma_backend.Controllers
                 .ToListAsync();
 
             if (meals == null || meals.Count == 0)
-                return Ok(new MealSummaryDto()); 
+                return Ok(new MealSummaryDto());
 
             var summary = new MealSummaryDto
             {

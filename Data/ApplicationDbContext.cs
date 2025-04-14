@@ -13,6 +13,7 @@ namespace sigma_backend.Data
 
         }
         // Represent tables in Db
+        public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Meal> Meals { get; set; }
