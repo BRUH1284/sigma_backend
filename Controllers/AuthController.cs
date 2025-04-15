@@ -93,7 +93,7 @@ namespace sigma_backend.Controllers
             string unauthorizedMessage = "Username not found and/or password is incorrect!";
 
             // Check username
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.UserName.ToLower());
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.UserName);
             if (user == null)
                 return Unauthorized(unauthorizedMessage);
 

@@ -47,7 +47,7 @@ namespace sigma_backend.Repository
 
         public async Task<Activity?> UpdateAsync(int id, UpdateActivityRequestDto activityDto)
         {
-            var existingActivity = await _context.Activities.FindAsync(activityDto.Id);
+            var existingActivity = await _context.Activities.FindAsync(id);
 
             if (existingActivity == null)
             {

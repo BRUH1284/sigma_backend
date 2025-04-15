@@ -32,6 +32,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 12;
 })
+.AddUserValidator<AlphanumericUsernameValidator<User>>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
