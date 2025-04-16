@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using sigma_backend.DataTransferObjects.Authentication;
-using sigma_backend.DataTransferObjects.Token;
 using sigma_backend.DataTransferObjects.User;
 using sigma_backend.Interfaces;
 using sigma_backend.Mappers;
@@ -68,7 +65,6 @@ namespace sigma_backend.Controllers
         public async Task<IActionResult> GetSummary(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
-
             if (user == null)
                 return NotFound();
 

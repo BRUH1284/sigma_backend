@@ -12,11 +12,6 @@ namespace sigma_backend.Repository
         {
             _context = context;
         }
-        // Get by ID
-        public async Task<RefreshToken?> GetByIdAsync(int id)
-        {
-            return await _context.RefreshTokens.FindAsync(id);
-        }
         // Get by UserId
         public async Task<List<RefreshToken>> GetByUserIdAsync(string userId)
         {
@@ -27,15 +22,10 @@ namespace sigma_backend.Repository
         {
             return await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.UserId == userId && rt.DeviceId == deviceId);
         }
-        // Get by token hash
-        public async Task<RefreshToken?> GetByTokenHashAsync(string tokenHash)
-        {
-            return await _context.RefreshTokens.FirstOrDefaultAsync(rt => rt.TokenHash == tokenHash);
-        }
         // Delete by ID
-        public async Task<RefreshToken?> DeleteAsync(int id)
+        public async Task<RefreshToken?> DeleteAsync(string userId, string deviceId)
         {
-            var refreshTokenModel = await _context.RefreshTokens.FindAsync(id);
+            var refreshTokenModel = await _context.RefreshTokens.FindAsync(userId, deviceId);
 
             if (refreshTokenModel == null)
             {

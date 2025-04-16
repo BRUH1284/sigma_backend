@@ -20,7 +20,7 @@ namespace sigma_backend.Repository
             return userProfile;
         }
 
-        public async Task<UserProfile?> UpdateAsync(int id, UpdateUserProfileRequestDto updateDto)
+        public async Task<UserProfile?> UpdateAsync(string id, UpdateUserProfileRequestDto updateDto)
         {
             var existingProfile = await _context.UserProfiles.FindAsync(id);
 
@@ -36,7 +36,7 @@ namespace sigma_backend.Repository
             return existingProfile;
         }
 
-        public async Task<UserProfile?> UpdatePictureUrlAsync(int id, string pictureUrl)
+        public async Task<UserProfile?> UpdatePictureUrlAsync(string id, string pictureUrl)
         {
             var existingProfile = await _context.UserProfiles.FindAsync(id);
 

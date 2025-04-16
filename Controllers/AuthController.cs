@@ -66,7 +66,7 @@ namespace sigma_backend.Controllers
                 {
                     UserId = user.Id,
                     Bio = $"Welcome to {user.UserName}'s profile!",
-                    // Default image
+                    User = user
                 };
 
                 // Save new profile
@@ -120,7 +120,7 @@ namespace sigma_backend.Controllers
             var token = await _refreshTokenRepo.GetByUserIdAndDeviceIdAsync(user.Id, dto.DeviceId);
             if (token != null)
             {
-                await _refreshTokenRepo.DeleteAsync(token.Id);
+                await _refreshTokenRepo.DeleteAsync(token.UserId, token.DeviceId);
             }
 
             return NoContent();
@@ -137,7 +137,7 @@ namespace sigma_backend.Controllers
             var tokens = await _refreshTokenRepo.GetByUserIdAsync(user.Id);
             foreach (var token in tokens)
             {
-                await _refreshTokenRepo.DeleteAsync(token.Id);
+                await _refreshTokenRepo.DeleteAsync(token.UserId, token.DeviceId);
             }
 
             return NoContent();

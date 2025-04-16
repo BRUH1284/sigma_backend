@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using sigma_backend.DataTransferObjects.User;
 using sigma_backend.Interfaces;
 using sigma_backend.Mappers;
@@ -50,7 +51,7 @@ namespace sigma_backend.Controllers
             if (user?.Profile == null)
                 return NotFound();
 
-            var profile = await _profileRepo.UpdateAsync(user.Profile.Id, updateDto);
+            var profile = await _profileRepo.UpdateAsync(user.Profile.UserId, updateDto);
 
             if (profile == null)
                 return NotFound();
@@ -91,24 +92,35 @@ namespace sigma_backend.Controllers
             }
 
             // Update DB
-            await _profileRepo.UpdatePictureUrlAsync(user.Profile.Id, fileName);
+            await _profileRepo.UpdatePictureUrlAsync(user.Profile.UserId, fileName);
 
             return Ok(new { Url = user.Profile.ProfilePictureUrl });
         }
-        [HttpGet("picture")]
-        public IActionResult DownloadProfilePicture([FromQuery] string fileName)
+        [HttpGet("{username}/picture")]
+        public async Task<IActionResult> DownloadProfilePicture(string username)
         {
-            if (string.IsNullOrWhiteSpace(fileName))
-                return BadRequest("Filename is required.");
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return NotFound();
 
-            var filePath = Path.Combine(profilePictureFolderPath, fileName);
+            var fileName = user.Profile?.ProfilePictureUrl;
+            var filePath = Path.Combine(profilePictureFolderPath, fileName ?? "");
 
-            if (!System.IO.File.Exists(filePath))
+            if (fileName.IsNullOrEmpty() || !System.IO.File.Exists(filePath))
                 return NotFound("File not found.");
 
             var contentType = "application/octet-stream";
             var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             return File(stream, contentType, fileName);
+        }
+        [HttpGet("me/picture")]
+        public async Task<IActionResult> DownloadMyProfilePicture()
+        {
+            var user = await _currentUserService.GetCurrentUserAsync(User);
+            if (user == null || user.UserName == null)
+                return Unauthorized();
+
+            return await DownloadProfilePicture(user.UserName);
         }
         [HttpDelete("me/picture")]
         public async Task<IActionResult> DeleteProfilePicture()

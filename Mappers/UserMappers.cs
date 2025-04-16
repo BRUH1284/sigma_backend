@@ -22,7 +22,6 @@ namespace sigma_backend.Mappers
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                ProfilePictureUrl = user.Profile?.ProfilePictureUrl,
                 Bio = user.Profile?.Bio
             };
         }

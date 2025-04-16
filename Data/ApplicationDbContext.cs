@@ -40,6 +40,24 @@ namespace sigma_backend.Data
                 }
             };
             builder.Entity<IdentityRole>().HasData(roles);
+
+            builder.Entity<UserProfile>()
+                .HasKey(up => up.UserId);
+
+            builder.Entity<User>()
+                .HasOne(u => u.Profile)
+                .WithOne(p => p.User)
+                .HasForeignKey<UserProfile>(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<RefreshToken>()
+                .HasKey(rt => new { rt.UserId, rt.DeviceId });
+
+            builder.Entity<RefreshToken>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(rt => rt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
