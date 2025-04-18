@@ -14,6 +14,7 @@ namespace sigma_backend.Data
         }
         // Represent tables in Db
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<ProfilePicture> ProfilePictures { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -53,6 +54,16 @@ namespace sigma_backend.Data
                 .HasForeignKey<UserProfile>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> UserProfile
 
+            // Configure Profile Picture
+            builder.Entity<ProfilePicture>()
+                .HasKey(pp => new { pp.UserId, pp.FileName });
+
+            builder.Entity<ProfilePicture>()
+                .HasOne<UserProfile>()
+                .WithMany(pp => pp.ProfilePictures) // User has many pictures
+                .HasForeignKey(pp => pp.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for UserProfile -> Profile Pictures;
+
             // Configure Posts
             builder.Entity<Post>()
                 .HasOne(p => p.User)
@@ -65,7 +76,7 @@ namespace sigma_backend.Data
                 .HasKey(pi => new { pi.PostId, pi.FileName });
 
             builder.Entity<PostImage>()
-                .HasOne(pi => pi.Post)
+                .HasOne<Post>()
                 .WithMany(p => p.Images) // Post has many images
                 .HasForeignKey(pi => pi.PostId)
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete for Post -> Post Images;

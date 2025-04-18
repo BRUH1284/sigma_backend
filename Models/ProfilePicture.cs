@@ -1,8 +1,8 @@
 namespace sigma_backend.Models
 {
-    public class PostImage
+    public class ProfilePicture
     {
-        public required int PostId { get; set; }
+        public required string UserId { get; set; }
         public required string FileName { get; set; }
     }
 }

@@ -15,13 +15,14 @@ namespace sigma_backend.Mappers
                 ProfilePictureUrl = profilePictureUrl
             };
         }
-        public static UserProfileDto ToUserProfileDto(this User user)
+        public static UserProfileDto ToUserProfileDto(this User user, string? profilePictureUrl)
         {
             return new UserProfileDto
             {
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                ProfilePictureUrl = profilePictureUrl,
                 Bio = user.Profile?.Bio
             };
         }

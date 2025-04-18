@@ -44,7 +44,7 @@ namespace sigma_backend.Controllers
             if (user == null)
                 return Unauthorized();
 
-            return Ok(user.ToUserProfileDto());
+            return Ok(GetUserProfileDto(user));
         }
         [HttpGet("{username}")]
         [AllowAnonymous]
@@ -55,7 +55,7 @@ namespace sigma_backend.Controllers
             if (user == null)
                 return NotFound();
 
-            return Ok(user.ToUserProfileDto());
+            return Ok(GetUserProfileDto(user));
         }
         [HttpPut("me")]
         public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateUserProfileRequestDto updateDto)
@@ -76,7 +76,7 @@ namespace sigma_backend.Controllers
                 return NotFound();
 
 
-            return Ok(user.ToUserProfileDto());
+            return Ok(GetUserProfileDto(user));
         }
         [HttpPost("me/picture")]
         public async Task<IActionResult> UploadProfilePicture(IFormFile file)
@@ -103,8 +103,17 @@ namespace sigma_backend.Controllers
             // Get profile picture path
             var path = _pathService.GetProfilePicturePath(user.UserName, fileName);
 
+            // Generate profile picture
+            var profilePicture = new ProfilePicture
+            {
+                UserId = user.Id,
+                FileName = fileName
+            };
+
             // If saving failed or updating DB failed, return server error
-            if (path == null || await _profileRepo.UpdatePictureFileName(user.Profile.UserId, fileName) == null)
+            if (path == null ||
+                await _profileRepo.CreateProfilePicture(profilePicture) == null ||
+                await _profileRepo.UpdatePictureFileName(user.Id, fileName) == null)
                 return Problem("Server failed to save the profile picture.");
 
             // Build the public URL to access the uploaded image
@@ -138,24 +147,45 @@ namespace sigma_backend.Controllers
 
             return await DownloadProfilePicture(user.UserName);
         }
-        [HttpDelete("me/picture")]
-        public async Task<IActionResult> DeleteProfilePicture()
+        [HttpDelete("{username}/picture/{fileName}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteProfilePicture(string username, string fileName)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return NotFound();
+
+            var profilePicture = await _profileRepo.DeleteProfilePicture(user.Id, fileName);
+
+            var filePath = _pathService.GetProfilePicturePath(username, fileName);
+
+            if (profilePicture == null || filePath == null)
+                return NotFound();
+
+            _fileService.DeleteFile(filePath);
+
+            return NoContent();
+        }
+        [HttpDelete("me/picture/{fileName}")]
+        public async Task<IActionResult> DeleteProfilePicture(string fileName)
         {
             var user = await _currentUserService.GetCurrentUserAsync(User);
             if (user?.UserName == null || user.Profile == null)
                 return Unauthorized();
 
-            // Delete old profile picture
-            if (user.Profile.ProfilePictureFileName != null)
-            {
-                var path = _pathService.GetProfilePicturePath(user.UserName, user.Profile.ProfilePictureFileName);
+            return await DeleteProfilePicture(user.UserName, fileName);
+        }
+        private UserProfileDto GetUserProfileDto(User user)
+        {
+            if (user.UserName == null)
+                throw new InvalidOperationException("UserName cannot be null when creating profile DTO.");
 
-                if (path != null)
-                    _fileService.DeleteFile(path);
+            string? profilePictureUrl = null;
 
-                await _profileRepo.DeletePictureFileName(user.Profile.UserId);
-            }
-            return NoContent();
+            if (user.Profile?.ProfilePictureFileName != null)
+                profilePictureUrl = _pathService.GetProfilePictureUrl(Request, user.UserName, user.Profile.ProfilePictureFileName);
+
+            return user.ToUserProfileDto(profilePictureUrl);
         }
     }
 }

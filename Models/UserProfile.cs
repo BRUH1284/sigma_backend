@@ -6,5 +6,6 @@ namespace sigma_backend.Models
 
         public string? Bio { get; set; }
         public string? ProfilePictureFileName { get; set; }
+        public virtual ICollection<ProfilePicture>? ProfilePictures { get; set; }
     }
 }

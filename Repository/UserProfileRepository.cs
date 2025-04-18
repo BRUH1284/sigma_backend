@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using sigma_backend.Data;
 using sigma_backend.DataTransferObjects.User;
 using sigma_backend.Interfaces.Repository;
@@ -19,6 +20,13 @@ namespace sigma_backend.Repository
             return userProfile;
         }
 
+        public async Task<ProfilePicture> CreateProfilePicture(ProfilePicture profilePicture)
+        {
+            await _context.ProfilePictures.AddAsync(profilePicture);
+            await _context.SaveChangesAsync();
+            return profilePicture;
+        }
+
         public async Task<UserProfile?> UpdateAsync(string id, UpdateUserProfileRequestDto updateDto)
         {
             var existingProfile = await _context.UserProfiles.FindAsync(id);
@@ -35,30 +43,46 @@ namespace sigma_backend.Repository
 
         public async Task<UserProfile?> UpdatePictureFileName(string id, string fileName)
         {
-            var existingProfile = await _context.UserProfiles.FindAsync(id);
+            var userProfile = await _context.UserProfiles.FindAsync(id);
 
-            if (existingProfile == null)
+            if (userProfile == null)
                 return null;
 
-            existingProfile.ProfilePictureFileName = fileName;
+            userProfile.ProfilePictureFileName = fileName;
 
             await _context.SaveChangesAsync();
 
-            return existingProfile;
+            return userProfile;
         }
 
-        public async Task<UserProfile?> DeletePictureFileName(string id)
+        public async Task<ProfilePicture?> DeleteProfilePicture(string userId, string fileName)
         {
-            var existingProfile = await _context.UserProfiles.FindAsync(id);
+            var userProfile = await _context.UserProfiles.FindAsync(userId);
+            var profilePicture = await _context.ProfilePictures.FindAsync(userId, fileName);
 
-            if (existingProfile == null)
+            if (userProfile == null || profilePicture == null)
                 return null;
 
-            existingProfile.ProfilePictureFileName = null;
+            // Remove the selected picture
+            _context.ProfilePictures.Remove(profilePicture);
 
             await _context.SaveChangesAsync();
+            if (userProfile.ProfilePictureFileName == profilePicture.FileName)
+            {
+                // Query remaining profile pictures for the user
+                var remainingPictures = await _context.ProfilePictures
+                    .Where(pp => pp.UserId == userId)
+                    .OrderByDescending(pp => pp.FileName)
+                    .ToListAsync();
 
-            return existingProfile;
+                var lastPicture = remainingPictures.FirstOrDefault();
+
+                userProfile.ProfilePictureFileName = lastPicture?.FileName;
+
+                await _context.SaveChangesAsync();
+            }
+
+            return profilePicture;
         }
     }
 
