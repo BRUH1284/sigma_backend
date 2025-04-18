@@ -10,9 +10,9 @@ namespace sigma_backend.Models
         public double AmountInGrams { get; set; }
         public DateTime Date { get; set; }
 
-        public User User { get; set; } = null!;
+        public virtual User User { get; set; } = null!;
 
         [ForeignKey("FoodId")]
-        public FoodNutrition Food { get; set; } = null!;
+        public virtual FoodNutrition Food { get; set; } = null!;
     }
 }

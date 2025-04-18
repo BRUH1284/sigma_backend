@@ -10,6 +10,6 @@ namespace sigma_backend.Models
         public string FileType { get; set; } = null!;
         public DateTime UploadedAt { get; set; }
 
-        public Meal Meal { get; set; } = null!;
+        public virtual Meal Meal { get; set; } = null!;
     }
 }

@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using sigma_backend.Data;
 using DotNetEnv;
-using sigma_backend.Interfaces;
 using sigma_backend.Repository;
 using sigma_backend.Models;
 using Microsoft.AspNetCore.Identity;
 using sigma_backend.Service;
 using sigma_backend.Extensions;
+using sigma_backend.Interfaces.Repository;
+using sigma_backend.Interfaces.Service;
+using sigma_backend.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,9 @@ builder.Services.AddSwaggerWithJwt();
 Env.Load();
 // Configure PostgreSQL database
 string? connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options
+    .UseLazyLoadingProxies() // for virtual to work properly
+    .UseNpgsql(connectionString));
 // Identity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -36,12 +40,16 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.Configure<StorageOptions>(builder.Configuration.GetSection("Storage"));
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IPathService, PathService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 var app = builder.Build();
 

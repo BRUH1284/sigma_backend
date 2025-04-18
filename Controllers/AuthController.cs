@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using sigma_backend.DataTransferObjects.Authentication;
 using sigma_backend.DataTransferObjects.Token;
-using sigma_backend.Interfaces;
+using sigma_backend.Interfaces.Repository;
+using sigma_backend.Interfaces.Service;
 using sigma_backend.Models;
 
 namespace sigma_backend.Controllers
@@ -66,7 +67,6 @@ namespace sigma_backend.Controllers
                 {
                     UserId = user.Id,
                     Bio = $"Welcome to {user.UserName}'s profile!",
-                    User = user
                 };
 
                 // Save new profile

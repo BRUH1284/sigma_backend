@@ -14,6 +14,8 @@ namespace sigma_backend.Data
         }
         // Represent tables in Db
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<PostImage> PostImages { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Meal> Meals { get; set; }
@@ -41,23 +43,42 @@ namespace sigma_backend.Data
             };
             builder.Entity<IdentityRole>().HasData(roles);
 
+            // Configure User Profile
             builder.Entity<UserProfile>()
-                .HasKey(up => up.UserId);
+                .HasKey(up => up.UserId); // UserId is the primary key in UserProfile
 
-            builder.Entity<User>()
-                .HasOne(u => u.Profile)
-                .WithOne(p => p.User)
+            builder.Entity<UserProfile>()
+                .HasOne<User>()
+                .WithOne(u => u.Profile) // User has one UserProfile
                 .HasForeignKey<UserProfile>(p => p.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> UserProfile
 
+            // Configure Posts
+            builder.Entity<Post>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Posts) // User has many Posts
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> Posts
+
+            // Configure Post Images
+            builder.Entity<PostImage>()
+                .HasKey(pi => new { pi.PostId, pi.FileName });
+
+            builder.Entity<PostImage>()
+                .HasOne(pi => pi.Post)
+                .WithMany(p => p.Images) // Post has many images
+                .HasForeignKey(pi => pi.PostId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for Post -> Post Images;
+
+            // Configure Refresh Tokens
             builder.Entity<RefreshToken>()
                 .HasKey(rt => new { rt.UserId, rt.DeviceId });
 
             builder.Entity<RefreshToken>()
                 .HasOne<User>()
-                .WithMany()
+                .WithMany() // User has many Refresh Tokens
                 .HasForeignKey(rt => rt.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> RefreshToken
         }
     }
 }

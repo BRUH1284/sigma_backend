@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using sigma_backend.Data;
 using sigma_backend.DataTransferObjects.Activity;
-using sigma_backend.Interfaces;
+using sigma_backend.Interfaces.Repository;
 using sigma_backend.Models;
 
 namespace sigma_backend.Repository

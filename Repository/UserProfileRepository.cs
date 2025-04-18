@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using sigma_backend.Data;
 using sigma_backend.DataTransferObjects.User;
-using sigma_backend.Interfaces;
+using sigma_backend.Interfaces.Repository;
 using sigma_backend.Models;
 
 namespace sigma_backend.Repository
@@ -25,9 +24,7 @@ namespace sigma_backend.Repository
             var existingProfile = await _context.UserProfiles.FindAsync(id);
 
             if (existingProfile == null)
-            {
                 return null;
-            }
 
             existingProfile.Bio = updateDto.Bio;
 
@@ -36,16 +33,28 @@ namespace sigma_backend.Repository
             return existingProfile;
         }
 
-        public async Task<UserProfile?> UpdatePictureUrlAsync(string id, string pictureUrl)
+        public async Task<UserProfile?> UpdatePictureFileName(string id, string fileName)
         {
             var existingProfile = await _context.UserProfiles.FindAsync(id);
 
             if (existingProfile == null)
-            {
                 return null;
-            }
 
-            existingProfile.ProfilePictureUrl = pictureUrl;
+            existingProfile.ProfilePictureFileName = fileName;
+
+            await _context.SaveChangesAsync();
+
+            return existingProfile;
+        }
+
+        public async Task<UserProfile?> DeletePictureFileName(string id)
+        {
+            var existingProfile = await _context.UserProfiles.FindAsync(id);
+
+            if (existingProfile == null)
+                return null;
+
+            existingProfile.ProfilePictureFileName = null;
 
             await _context.SaveChangesAsync();
 

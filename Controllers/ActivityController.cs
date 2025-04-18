@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sigma_backend.DataTransferObjects;
 using sigma_backend.DataTransferObjects.Activity;
-using sigma_backend.Interfaces;
+using sigma_backend.Interfaces.Repository;
 using sigma_backend.Mappers;
 
 namespace sigma_backend.Controllers
@@ -32,9 +32,7 @@ namespace sigma_backend.Controllers
             var activity = await _activityRepo.GetByIdAsync(id);
 
             if (activity == null)
-            {
                 return NotFound();
-            }
 
             return Ok(activity.ToActivityDto());
         }
@@ -58,9 +56,7 @@ namespace sigma_backend.Controllers
             var activityModel = await _activityRepo.UpdateAsync(id, updateDto);
 
             if (activityModel == null)
-            {
                 return NotFound();
-            }
 
             return Ok(activityModel.ToActivityDto());
         }
@@ -73,9 +69,7 @@ namespace sigma_backend.Controllers
             var activityModel = await _activityRepo.DeleteAsync(id);
 
             if (activityModel == null)
-            {
                 return NotFound();
-            }
 
             return NoContent();
         }

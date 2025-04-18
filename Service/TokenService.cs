@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using sigma_backend.Interfaces;
+using sigma_backend.Interfaces.Service;
 using sigma_backend.Models;
 
 namespace sigma_backend.Service
@@ -23,7 +23,6 @@ namespace sigma_backend.Service
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName ?? string.Empty),
-                new Claim(ClaimTypes.NameIdentifier, user.Id) // Need to secure identification 
             };
 
             // Add role claims

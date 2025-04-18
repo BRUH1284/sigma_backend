@@ -7,6 +7,6 @@ namespace sigma_backend.Models
         public string Name { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public List<CustomDishIngredient> Ingredients { get; set; } = new();
+        public virtual List<CustomDishIngredient> Ingredients { get; set; } = new();
     }
 }

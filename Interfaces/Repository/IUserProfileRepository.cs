@@ -1,12 +1,13 @@
 using sigma_backend.DataTransferObjects.User;
 using sigma_backend.Models;
 
-namespace sigma_backend.Interfaces
+namespace sigma_backend.Interfaces.Repository
 {
     public interface IUserProfileRepository
     {
         Task<UserProfile> CreateAsync(UserProfile userProfile);
         Task<UserProfile?> UpdateAsync(string id, UpdateUserProfileRequestDto updateDto);
-        Task<UserProfile?> UpdatePictureUrlAsync(string id, string pictureUrl);
+        Task<UserProfile?> UpdatePictureFileName(string id, string fileName);
+        Task<UserProfile?> DeletePictureFileName(string id);
     }
 }

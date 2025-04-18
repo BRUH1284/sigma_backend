@@ -5,14 +5,14 @@ namespace sigma_backend.Mappers
 {
     public static class UserMappers
     {
-        public static UserSummaryDto ToUserSummaryDto(this User user)
+        public static UserSummaryDto ToUserSummaryDto(this User user, string? profilePictureUrl)
         {
             return new UserSummaryDto
             {
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                ProfilePictureUrl = user.Profile?.ProfilePictureUrl
+                ProfilePictureUrl = profilePictureUrl
             };
         }
         public static UserProfileDto ToUserProfileDto(this User user)

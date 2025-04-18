@@ -8,7 +8,7 @@ namespace sigma_backend.Models
         public int FoodId { get; set; }
         public double AmountInGrams { get; set; }
 
-        public CustomDish CustomDish { get; set; } = null!;
-        public FoodNutrition Food { get; set; } = null!;
+        public virtual CustomDish CustomDish { get; set; } = null!;
+        public virtual FoodNutrition Food { get; set; } = null!;
     }
 }

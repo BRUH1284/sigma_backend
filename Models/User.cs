@@ -10,7 +10,7 @@ namespace sigma_backend.Models
         public required string LastName { get; set; }
 
         public virtual UserProfile? Profile { get; set; }
-        // public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<Post>? Posts { get; set; }
         // public virtual ICollection<Comment> Comments { get; set; }
         // public virtual ICollection<Like> Likes { get; set; }
     }
