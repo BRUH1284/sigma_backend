@@ -125,43 +125,54 @@ namespace sigma_backend.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> DownloadProfilePicture(string username)
         {
+            // Get user by username
             var user = await _userManager.FindByNameAsync(username);
 
+            // Get user profile picture file name 
             var fileName = user?.Profile?.ProfilePictureFileName;
 
             if (fileName == null)
                 return NotFound();
 
+            // Get profile picture path
             var path = _pathService.GetProfilePicturePath(username, fileName);
 
+            // Get picture type 
             var contentType = _fileService.GetContentType(fileName);
 
+            // Return file if path is valid
             return path == null ? NotFound() : File(_fileService.GetFileStream(path), contentType, fileName);
         }
         [HttpGet("me/picture")]
         public async Task<IActionResult> DownloadMyProfilePicture()
         {
+            // Get the current logged-in user
             var user = await _currentUserService.GetCurrentUserAsync(User);
             if (user == null || user.UserName == null)
                 return Unauthorized();
 
+            // Get profile picture by username
             return await DownloadProfilePicture(user.UserName);
         }
         [HttpDelete("{username}/picture/{fileName}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProfilePicture(string username, string fileName)
         {
+            // Get user by username
             var user = await _userManager.FindByNameAsync(username);
             if (user == null)
                 return NotFound();
 
+            // Delete profile picture from DB
             var profilePicture = await _profileRepo.DeleteProfilePicture(user.Id, fileName);
 
+            // Get profile picture file path
             var filePath = _pathService.GetProfilePicturePath(username, fileName);
 
             if (profilePicture == null || filePath == null)
                 return NotFound();
 
+            // Delete profile picture file
             _fileService.DeleteFile(filePath);
 
             return NoContent();
@@ -169,10 +180,12 @@ namespace sigma_backend.Controllers
         [HttpDelete("me/picture/{fileName}")]
         public async Task<IActionResult> DeleteProfilePicture(string fileName)
         {
+            // Get the current logged-in user
             var user = await _currentUserService.GetCurrentUserAsync(User);
             if (user?.UserName == null || user.Profile == null)
                 return Unauthorized();
 
+            // Delete profile picture by username
             return await DeleteProfilePicture(user.UserName, fileName);
         }
         private UserProfileDto GetUserProfileDto(User user)
@@ -182,6 +195,7 @@ namespace sigma_backend.Controllers
 
             string? profilePictureUrl = null;
 
+            // If profile picture name is not null get relative path to it
             if (user.Profile?.ProfilePictureFileName != null)
                 profilePictureUrl = _pathService.GetProfilePictureUrl(Request, user.UserName, user.Profile.ProfilePictureFileName);
 

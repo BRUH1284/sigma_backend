@@ -2,6 +2,7 @@ namespace sigma_backend.Interfaces.Service
 {
     public interface IPathService
     {
+        string? GetUserUploadsDirectoryPath(string username, bool create = true);
         string GetProfilePictureFolderPath(string username);
         string? GetProfilePicturePath(string username, string fileName);
         string? GetProfilePictureUrl(HttpRequest httpRequest, string username, string fileName);

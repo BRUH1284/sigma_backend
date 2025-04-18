@@ -10,12 +10,25 @@ public class PathService : IPathService
     {
         _options = options.Value;
     }
-    public string GetProfilePictureFolderPath(string username)
+    public string? GetUserUploadsDirectoryPath(string username, bool create = true)
     {
         // Generate path
         var path = Path.Combine(
             _options.RootPath,
             _options.UploadsPath,
+            username);
+
+        // Create directory if it not exists
+        if (!Directory.Exists(path) && create)
+            Directory.CreateDirectory(path);
+
+        return Directory.Exists(path) ? path : null;
+    }
+    public string GetProfilePictureFolderPath(string username)
+    {
+        // Generate path
+        var path = Path.Combine(
+            GetUserUploadsDirectoryPath(username)!,
             username,
             _options.ProfilePicturesSubfolder
         );
@@ -48,8 +61,7 @@ public class PathService : IPathService
     {
         // Generate Post
         var path = Path.Combine(
-            _options.RootPath,
-            _options.UploadsPath,
+            GetUserUploadsDirectoryPath(username)!,
             username,
             _options.PostSubfolder,
             postId.ToString(),

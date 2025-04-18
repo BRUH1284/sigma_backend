@@ -7,5 +7,6 @@ namespace sigma_backend.Interfaces.Service
         Stream GetFileStream(string path);
         string GetContentType(string fileName);
         void DeleteFile(string path);
+        void DeleteDirectory(string path);
     }
 }

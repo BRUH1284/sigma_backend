@@ -42,6 +42,11 @@ namespace sigma_backend.Service
             if (File.Exists(path))
                 File.Delete(path);
         }
+        public void DeleteDirectory(string path)
+        {
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+        }
 
         public Stream GetFileStream(string path)
         {
