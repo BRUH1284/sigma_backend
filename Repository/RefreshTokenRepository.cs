@@ -5,13 +5,9 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Repository
 {
-    public class RefreshTokenRepository : IRefreshTokenRepository
+    public class RefreshTokenRepository : RepositoryBase, IRefreshTokenRepository
     {
-        private readonly ApplicationDbContext _context;
-        public RefreshTokenRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        public RefreshTokenRepository(ApplicationDbContext context) : base(context) { }
         // Get by UserId
         public async Task<List<RefreshToken>> GetByUserIdAsync(string userId)
         {

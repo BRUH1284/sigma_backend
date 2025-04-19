@@ -6,13 +6,9 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Repository
 {
-    public class ActivityRepository : IActivityRepository
+    public class ActivityRepository : RepositoryBase, IActivityRepository
     {
-        private readonly ApplicationDbContext _context;
-        public ActivityRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        public ActivityRepository(ApplicationDbContext context) : base(context) { }
 
         public async Task<Activity> CreateAsync(Activity activityModel)
         {
@@ -26,9 +22,7 @@ namespace sigma_backend.Repository
             var activityModel = await _context.Activities.FindAsync(id);
 
             if (activityModel == null)
-            {
                 return null;
-            }
 
             _context.Activities.Remove(activityModel);
             await _context.SaveChangesAsync();

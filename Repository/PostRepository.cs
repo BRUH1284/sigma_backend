@@ -5,13 +5,9 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Repository
 {
-    public class PostRepository : IPostRepository
+    public class PostRepository : RepositoryBase, IPostRepository
     {
-        private readonly ApplicationDbContext _context;
-        public PostRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        public PostRepository(ApplicationDbContext context) : base(context) { }
         public async Task<Post> CreateAsync(Post post)
         {
             await _context.Posts.AddAsync(post);

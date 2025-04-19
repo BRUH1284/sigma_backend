@@ -8,13 +8,11 @@ namespace sigma_backend.Data
     // Bridge between application and the PostgreSQL database. It holds DbSet properties that represent tables in the database.
     public class ApplicationDbContext : IdentityDbContext<User>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
-        {
-
-        }
+        public ApplicationDbContext(DbContextOptions options) : base(options) { }
         // Represent tables in Db
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<ProfilePicture> ProfilePictures { get; set; }
+        public DbSet<UserFollower> UserFollowers { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -63,6 +61,27 @@ namespace sigma_backend.Data
                 .WithMany(pp => pp.ProfilePictures) // User has many pictures
                 .HasForeignKey(pp => pp.UserId)
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete for UserProfile -> Profile Pictures;
+
+            // Configure followers
+            builder.Entity<UserFollower>()
+                .HasKey(f => new { f.FollowerId, f.FolloweeId });
+
+            builder.Entity<UserFollower>()
+                .HasOne(f => f.Follower)
+                .WithMany(u => u.Following)
+                .HasForeignKey(f => f.FollowerId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> followers;
+
+            builder.Entity<UserFollower>()
+                .HasOne(f => f.Followee)
+                .WithMany(u => u.Followers)
+                .HasForeignKey(f => f.FolloweeId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> followee;
+
+            // Restrict duplicated follows
+            builder.Entity<UserFollower>()
+                .HasIndex(uf => new { uf.FollowerId, uf.FolloweeId })
+                .IsUnique();
 
             // Configure Posts
             builder.Entity<Post>()

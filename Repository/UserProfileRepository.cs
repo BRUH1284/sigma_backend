@@ -6,13 +6,9 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Repository
 {
-    public class UserProfileRepository : IUserProfileRepository
+    public class UserProfileRepository : RepositoryBase, IUserProfileRepository
     {
-        private readonly ApplicationDbContext _context;
-        public UserProfileRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        public UserProfileRepository(ApplicationDbContext context) : base(context) { }
         public async Task<UserProfile> CreateAsync(UserProfile userProfile)
         {
             await _context.UserProfiles.AddAsync(userProfile);

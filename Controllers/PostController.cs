@@ -8,8 +8,6 @@ using sigma_backend.Models;
 using sigma_backend.Mappers;
 using sigma_backend.Extensions;
 using Microsoft.AspNetCore.Identity;
-using sigma_backend.DataTransferObjects.User;
-
 
 namespace sigma_backend.Controllers
 {
@@ -176,20 +174,7 @@ namespace sigma_backend.Controllers
                 }
             }
 
-            return post.ToPostDto(GetAuthorDto(post.User), imageUrls);
-        }
-        // Get post author
-        private UserSummaryDto GetAuthorDto(User user)
-        {
-            if (user.UserName == null)
-                throw new InvalidOperationException("UserName cannot be null when creating author DTO.");
-
-            string? authorProfilePictureUrl = null;
-
-            if (user.Profile?.ProfilePictureFileName != null)
-                authorProfilePictureUrl = _pathService.GetProfilePictureUrl(Request, user.UserName, user.Profile.ProfilePictureFileName);
-
-            return user.ToUserSummaryDto(authorProfilePictureUrl);
+            return post.ToPostDto(post.User.ToUserSummaryDto(post.User.GetProfilePictureUrl(Request, _pathService)), imageUrls);
         }
     }
 }

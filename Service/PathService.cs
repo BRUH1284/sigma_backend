@@ -29,7 +29,6 @@ public class PathService : IPathService
         // Generate path
         var path = Path.Combine(
             GetUserUploadsDirectoryPath(username)!,
-            username,
             _options.ProfilePicturesSubfolder
         );
 
@@ -62,7 +61,6 @@ public class PathService : IPathService
         // Generate Post
         var path = Path.Combine(
             GetUserUploadsDirectoryPath(username)!,
-            username,
             _options.PostSubfolder,
             postId.ToString(),
             _options.PostImagesSubfolder

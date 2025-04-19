@@ -6,13 +6,9 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : RepositoryBase, IUserRepository
     {
-        private readonly ApplicationDbContext _context;
-        public UserRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        public UserRepository(ApplicationDbContext context) : base(context) { }
         public async Task<IEnumerable<User>> SearchByUsernameAsync(string query)
         {
             return await _context.Users

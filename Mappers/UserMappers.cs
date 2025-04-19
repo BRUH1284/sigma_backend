@@ -23,7 +23,9 @@ namespace sigma_backend.Mappers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 ProfilePictureUrl = profilePictureUrl,
-                Bio = user.Profile?.Bio
+                Bio = user.Profile?.Bio,
+                followersCount = user.Followers.Count,
+                followeeCount = user.Following.Count
             };
         }
         public static UpdateUserRequestDto ToUpdateUserRequestDto(this UpdateUserProfileRequestDto dto)
