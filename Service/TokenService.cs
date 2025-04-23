@@ -79,14 +79,14 @@ namespace sigma_backend.Service
         {
             return tokenHash == ComputeSha256Hash(refreshToken);
         }
-        private string ComputeSha256Hash(string rawToken)
+        internal string ComputeSha256Hash(string rawToken)
         {
             using var sha256 = SHA256.Create();
             var bytes = Encoding.UTF8.GetBytes(rawToken);
             var hash = sha256.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
         }
-        public ClaimsPrincipal? GetPrincipalFromExpiredToken(string accessToken)
+        public ClaimsPrincipal? GetPrincipalFromToken(string accessToken)
         {
             // Define token validation parameters
             var tokenValidationParameters = _tokenValidationParameters.Clone();
@@ -94,17 +94,24 @@ namespace sigma_backend.Service
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            // Validate the token and extract the claims principal and the security token
-            var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
+            try
+            {
+                // Validate the token and extract the claims principal and the security token
+                var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
+                // Cast the security token to a JwtSecurityToken for further validation.
+                var jwtSecurityToken = securityToken as JwtSecurityToken;
 
-            // Cast the security token to a JwtSecurityToken for further validation.
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
+                // Ensure the token is a valid JWT and uses the HmacSha512 signing algorithm
+                if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase))
+                    return null;
 
-            // Ensure the token is a valid JWT and uses the HmacSha512 signing algorithm
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase))
+                return principal;
+            }
+            catch
+            {
                 return null;
+            }
 
-            return principal;
         }
     }
 }

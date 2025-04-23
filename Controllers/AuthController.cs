@@ -147,7 +147,7 @@ namespace sigma_backend.Controllers
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequestDto tokenRequest)
         {
             // Get username from access token
-            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenRequest.OldAccessToken);
+            var principal = _tokenService.GetPrincipalFromToken(tokenRequest.OldAccessToken);
             var userName = principal?.Identity?.Name;
             if (userName == null)
                 return Unauthorized("Invalid token or username");

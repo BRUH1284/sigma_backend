@@ -7,7 +7,7 @@ namespace sigma_backend.Interfaces.Service
     {
         string GenerateAccessToken(User user, IList<string> roles, DateTime expiresOn);
         (RefreshToken, string) GenerateRefreshToken(string userId, string deviceId, DateTime expiresOn);
-        ClaimsPrincipal? GetPrincipalFromExpiredToken(string accessToken);
+        ClaimsPrincipal? GetPrincipalFromToken(string accessToken);
         bool VerifyRefreshToken(string refreshToken, string tokenHash);
     }
 }

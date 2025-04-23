@@ -106,7 +106,7 @@ namespace sigma_backend.Controllers
                 return Unauthorized();
 
             // Get profile picture folder path
-            var folderPath = _pathService.GetProfilePictureFolderPath(user.UserName);
+            var folderPath = _pathService.GetProfilePictureDirectoryPath(user.UserName);
 
             // Save profile picture
             var fileName = await _fileService.SaveImageAsync(file, folderPath);

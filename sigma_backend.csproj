@@ -16,4 +16,12 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.14" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <InternalsVisibleTo Include="sigma_backend.Tests" />
+    <Compile Remove="sigma_backend.Tests\**\*.cs" />
+    <None Remove="MvcTestingAppManifest.json" />
+  </ItemGroup>
+
+
 </Project>

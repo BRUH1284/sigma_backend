@@ -60,7 +60,7 @@ namespace sigma_backend.Controllers
                 return Ok(post.ToPostDto(userSummaryDto));
 
             // Get Post images folder path
-            var folderPath = _pathService.GetPostImagesFolderPath(user.UserName, post.Id);
+            var folderPath = _pathService.GetPostImagesDirectoryPath(user.UserName, post.Id);
 
             // Save images
             var images = new List<PostImage>();
@@ -136,10 +136,9 @@ namespace sigma_backend.Controllers
         {
             Post? post;
 
-            if (User.IsInRole("Admin")) // Allow Admin to delete any post
-                post = await _postRepo.DeleteAsync(id);
-            else // Check post owner
+            if (!User.IsInRole("Admin")) // Allow Admin to delete any post
             {
+                // Check post owner
                 post = await _postRepo.GetByIdAsync(id);
 
                 if (post == null)
@@ -147,9 +146,10 @@ namespace sigma_backend.Controllers
 
                 if (post?.User?.UserName != null && post.User.UserName != User?.Identity?.Name)
                     return Unauthorized();
-
-                post = await _postRepo.DeleteAsync(post!.Id);
             }
+
+            // Delete post
+            post = await _postRepo.DeleteAsync(id);
 
             if (post == null)
                 return NotFound();

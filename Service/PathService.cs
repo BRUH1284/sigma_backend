@@ -24,7 +24,7 @@ public class PathService : IPathService
 
         return Directory.Exists(path) ? path : null;
     }
-    public string GetProfilePictureFolderPath(string username)
+    public string GetProfilePictureDirectoryPath(string username)
     {
         // Generate path
         var path = Path.Combine(
@@ -40,10 +40,10 @@ public class PathService : IPathService
     }
     public string? GetProfilePicturePath(string username, string fileName)
     {
-        var profilePictureFolderPath = GetProfilePictureFolderPath(username);
+        var profilePictureDirectoryPath = GetProfilePictureDirectoryPath(username);
 
         var path = Path.Combine(
-            profilePictureFolderPath,
+            profilePictureDirectoryPath,
             fileName
         );
 
@@ -56,7 +56,7 @@ public class PathService : IPathService
         // If path exists return public url
         return path == null ? null : BuildPublicUrl(httpRequest, path);
     }
-    public string GetPostImagesFolderPath(string username, int postId)
+    public string GetPostImagesDirectoryPath(string username, int postId)
     {
         // Generate Post
         var path = Path.Combine(
@@ -74,10 +74,10 @@ public class PathService : IPathService
     }
     public string? GetPostImagePath(string username, int postId, string fileName)
     {
-        var postImagesFolderPath = GetPostImagesFolderPath(username, postId);
+        var postImagesDirectoryPath = GetPostImagesDirectoryPath(username, postId);
 
         var path = Path.Combine(
-            postImagesFolderPath,
+            postImagesDirectoryPath,
             fileName
         );
 
