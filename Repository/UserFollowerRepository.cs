@@ -26,11 +26,13 @@ namespace sigma_backend.Repository
 
         public async Task<UserFollower?> DeleteAsync(string followerId, string followeeId)
         {
+            // Get follower
             var follower = await _context.UserFollowers.FindAsync(followerId, followeeId);
 
             if (follower == null)
                 return null;
 
+            // Remove follower
             _context.Remove(follower);
             await _context.SaveChangesAsync();
             return follower;

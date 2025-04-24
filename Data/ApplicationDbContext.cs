@@ -13,6 +13,8 @@ namespace sigma_backend.Data
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<ProfilePicture> ProfilePictures { get; set; }
         public DbSet<UserFollower> UserFollowers { get; set; }
+        public DbSet<Friendship> Friendships { get; set; }
+        public DbSet<FriendRequest> FriendRequests { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -77,6 +79,38 @@ namespace sigma_backend.Data
                 .WithMany(u => u.Followers)
                 .HasForeignKey(f => f.FolloweeId)
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> followee;
+
+            // Configure friend requests
+            builder.Entity<FriendRequest>()
+                .HasKey(r => new { r.SenderId, r.ReceiverId });
+
+            builder.Entity<FriendRequest>()
+                .HasOne(r => r.Sender)
+                .WithMany(s => s.FriendRequests)
+                .HasForeignKey(r => r.SenderId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> friend requests as sender
+
+            builder.Entity<FriendRequest>()
+                .HasOne(r => r.Receiver)
+                .WithMany(r => r.ReceivedFriendRequests)
+                .HasForeignKey(r => r.ReceiverId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> friend requests as receiver
+
+            // Configure friendships
+            builder.Entity<Friendship>()
+                .HasKey(f => new { f.UserId, f.FriendId });
+
+            builder.Entity<Friendship>()
+                .HasOne(r => r.User)
+                .WithMany(s => s.Friendships)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> friendship as user
+
+            builder.Entity<Friendship>()
+                .HasOne(r => r.Friend)
+                .WithMany()
+                .HasForeignKey(r => r.FriendId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> friendship as friend
 
             // Restrict duplicated follows
             builder.Entity<UserFollower>()

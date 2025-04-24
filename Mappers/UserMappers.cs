@@ -24,6 +24,8 @@ namespace sigma_backend.Mappers
                 LastName = user.LastName,
                 ProfilePictureUrl = profilePictureUrl,
                 Bio = user.Profile?.Bio,
+                FriendsVisible = user.Profile?.FriendsVisible ?? false,
+                FriendCount = user.Profile?.FriendsVisible ?? false ? user.Friendships.Count : 0,
                 followersCount = user.Followers.Count,
                 followeeCount = user.Following.Count
             };

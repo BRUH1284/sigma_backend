@@ -31,6 +31,7 @@ namespace sigma_backend.Repository
                 return null;
 
             existingProfile.Bio = updateDto.Bio;
+            existingProfile.FriendsVisible = updateDto.FriendsVisible;
 
             await _context.SaveChangesAsync();
 

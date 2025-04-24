@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-
 namespace sigma_backend.Models
 {
     public class UserFollower

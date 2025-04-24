@@ -10,5 +10,7 @@ namespace sigma_backend.DataTransferObjects.User
         public required string LastName { get; set; }
         [Required]
         public required string Bio { get; set; }
+        [Required]
+        public required bool FriendsVisible { get; set; }
     }
 }
