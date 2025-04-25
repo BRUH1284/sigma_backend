@@ -129,7 +129,7 @@ namespace sigma_backend.Controllers
 
             // Build the public URL to access the uploaded image
             var url = _pathService.BuildPublicUrl(Request, path);
-            return Ok(new { Url = url });
+            return Created(url, new { Url = url });
         }
         [HttpGet("{username}/picture")]
         [AllowAnonymous]

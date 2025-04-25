@@ -8,7 +8,6 @@ namespace sigma_backend.Data
     // Bridge between application and the PostgreSQL database. It holds DbSet properties that represent tables in the database.
     public class ApplicationDbContext : IdentityDbContext<User>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options) { }
         // Represent tables in Db
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<ProfilePicture> ProfilePictures { get; set; }
@@ -19,17 +18,21 @@ namespace sigma_backend.Data
         public DbSet<PostImage> PostImages { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Activity> Activities { get; set; }
+        public DbSet<UserActivity> UserActivities { get; set; }
         public DbSet<Meal> Meals { get; set; }
         public DbSet<MealFile> MealFiles { get; set; }
         public DbSet<FoodNutrition> FoodNutrition { get; set; }
         public DbSet<CustomFood> CustomFoods { get; set; }
         public DbSet<CustomDish> CustomDishes { get; set; }
         public DbSet<CustomDishIngredient> CustomDishIngredients { get; set; }
-
-
+        public DbSet<DataVersion> DataVersions { get; set; }
+        public ApplicationDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Uuid support
+            builder.HasPostgresExtension("uuid-ossp");
 
             // Create roles
             List<IdentityRole> roles = new List<IdentityRole>{
@@ -102,7 +105,7 @@ namespace sigma_backend.Data
 
             builder.Entity<Friendship>()
                 .HasOne(r => r.User)
-                .WithMany(s => s.Friendships)
+                .WithMany(s => s.Friendships) // User has many friends
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> friendship as user
 
@@ -142,7 +145,32 @@ namespace sigma_backend.Data
                 .HasOne<User>()
                 .WithMany() // User has many Refresh Tokens
                 .HasForeignKey(rt => rt.UserId)
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> RefreshToken
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> Refresh Token
+
+            // Configure Activities
+            builder.Entity<Activity>()
+                .HasKey(a => a.Code);
+
+            builder.Entity<Activity>()
+                .Property(a => a.Code)
+                .ValueGeneratedNever(); // Disable auto-increment            
+
+            // Configure User Activities
+
+            // Use uuid so it is safe to expose them to user
+            builder.Entity<UserActivity>()
+                .Property(ua => ua.Id)
+                .HasDefaultValueSql("uuid_generate_v4()");
+
+            builder.Entity<UserActivity>()
+                .HasOne(ua => ua.User)
+                .WithMany(u => u.Activities) // User has many User Activities
+                .HasForeignKey(ua => ua.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> User Activities
+
+            // Configure Data Versions
+            builder.Entity<DataVersion>()
+                .HasKey(dv => dv.DataResource);
         }
     }
 }

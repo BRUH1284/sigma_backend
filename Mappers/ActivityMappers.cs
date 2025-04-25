@@ -1,4 +1,4 @@
-using sigma_backend.DataTransferObjects;
+using sigma_backend.DataTransferObjects.Activity;
 using sigma_backend.Models;
 
 namespace sigma_backend.Mappers
@@ -9,17 +9,42 @@ namespace sigma_backend.Mappers
         {
             return new ActivityDto
             {
-                Id = activityModel.Id,
-                Name = activityModel.Name,
-                KcalPerHour = activityModel.KcalPerHour
+                Code = activityModel.Code,
+                MajorHeading = activityModel.MajorHeading,
+                MetValue = activityModel.MetValue,
+                Description = activityModel.Description
+            };
+        }
+        public static UserActivityDto ToUserActivityDto(this UserActivity userActivityModel)
+        {
+            return new UserActivityDto
+            {
+                Id = userActivityModel.Id,
+                MajorHeading = userActivityModel.MajorHeading,
+                MetValue = userActivityModel.MetValue,
+                Description = userActivityModel.Description
             };
         }
         public static Activity ToActivityFromCreateDto(this CreateActivityRequestDto activityDto)
         {
             return new Activity
             {
-                Name = activityDto.Name,
-                KcalPerHour = activityDto.KcalPerHour
+                Code = activityDto.Code,
+                MajorHeading = activityDto.MajorHeading,
+                MetValue = activityDto.MetValue,
+                Description = activityDto.Description
+            };
+        }
+        public static UserActivity ToUserActivityFromCreateDto(
+            this CreateUserActivityRequestDto userActivityDto,
+            string userId)
+        {
+            return new UserActivity
+            {
+                UserId = userId,
+                MajorHeading = userActivityDto.MajorHeading,
+                MetValue = userActivityDto.MetValue,
+                Description = userActivityDto.Description
             };
         }
     }

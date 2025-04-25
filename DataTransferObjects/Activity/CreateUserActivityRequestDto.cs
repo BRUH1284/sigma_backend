@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace sigma_backend.DataTransferObjects.Activity
 {
-    public class UpdateActivityRequestDto
+    public class CreateUserActivityRequestDto
     {
         [Required]
         public required string MajorHeading { get; set; }

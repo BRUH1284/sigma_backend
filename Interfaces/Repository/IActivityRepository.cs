@@ -6,8 +6,8 @@ namespace sigma_backend.Interfaces.Repository
     public interface IActivityRepository
     {
         Task<List<Activity>> GetAllAsync();
-        Task<Activity?> GetByIdAsync(int id);
-        Task<Activity> CreateAsync(Activity activityModel);
+        Task<Activity?> GetByCodeAsync(int id);
+        Task<Activity?> CreateAsync(Activity activityModel);
         Task<Activity?> UpdateAsync(int id, UpdateActivityRequestDto activityDto);
         Task<Activity?> DeleteAsync(int id);
     }

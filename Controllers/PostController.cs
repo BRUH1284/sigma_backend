@@ -84,7 +84,11 @@ namespace sigma_backend.Controllers
             // Add images to DB
             await _postRepo.AddImagesAsync(images);
 
-            return Ok(post.ToPostDto(userSummaryDto, imageUrls));
+            return CreatedAtAction(
+                nameof(GetPostById),
+                new { id = post.Id },
+                post.ToPostDto(userSummaryDto, imageUrls)
+            );
         }
         [HttpGet("/api/profiles/me/posts")]
         public async Task<IActionResult> GetMyPosts()

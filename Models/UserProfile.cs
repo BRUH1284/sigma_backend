@@ -8,5 +8,7 @@ namespace sigma_backend.Models
         public bool FriendsVisible { get; set; } = true;
         public string? ProfilePictureFileName { get; set; }
         public virtual ICollection<ProfilePicture>? ProfilePictures { get; set; }
+        public float Weight { get; set; } // TODO: Update, dto?
+        public float Height { get; set; }
     }
 }
