@@ -5,9 +5,9 @@ namespace sigma_backend.Models
     public class User : IdentityUser
     {
         [ProtectedPersonalData]
-        public required string FirstName { get; set; }
+        public string FirstName { get; set; } = "";
         [ProtectedPersonalData]
-        public required string LastName { get; set; }
+        public string LastName { get; set; } = "";
 
         public virtual UserProfile? Profile { get; set; }
         public virtual ICollection<Post> Posts { get; set; } = new List<Post>();

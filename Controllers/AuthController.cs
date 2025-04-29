@@ -48,9 +48,7 @@ namespace sigma_backend.Controllers
                 var user = new User
                 {
                     UserName = registerDto.UserName,
-                    Email = registerDto.Email,
-                    FirstName = registerDto.FirstName,
-                    LastName = registerDto.LastName
+                    Email = registerDto.Email
                 };
                 // Save new user
                 var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
