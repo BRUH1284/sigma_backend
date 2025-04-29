@@ -4,11 +4,6 @@ namespace sigma_backend.Models
 {
     public class User : IdentityUser
     {
-        [ProtectedPersonalData]
-        public string FirstName { get; set; } = "";
-        [ProtectedPersonalData]
-        public string LastName { get; set; } = "";
-
         public virtual UserProfile? Profile { get; set; }
         public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
         public virtual ICollection<UserFollower> Followers { get; set; } = new List<UserFollower>();

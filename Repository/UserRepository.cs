@@ -17,22 +17,5 @@ namespace sigma_backend.Repository
                 .Take(10)
                 .ToListAsync();
         }
-
-        public async Task<User?> UpdateAsync(string id, UpdateUserRequestDto updateDto)
-        {
-            var existingUser = await _context.Users.FindAsync(id);
-
-            if (existingUser == null)
-            {
-                return null;
-            }
-
-            existingUser.FirstName = updateDto.FirstName;
-            existingUser.LastName = updateDto.LastName;
-
-            await _context.SaveChangesAsync();
-
-            return existingUser;
-        }
     }
 }

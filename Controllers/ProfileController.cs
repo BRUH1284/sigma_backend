@@ -52,6 +52,18 @@ namespace sigma_backend.Controllers
             // Return user profile
             return Ok(user.ToUserProfileDto(user.GetProfilePictureUrl(Request, _pathService)));
         }
+        [HttpGet("me/settings")]
+        public async Task<IActionResult> GetMyProfileSettings()
+        {
+            // Get the current logged-in user
+            var user = await _currentUserService.GetCurrentUserAsync(User);
+
+            if (user == null)
+                return Unauthorized();
+
+            // Return user profile
+            return Ok(user.Profile!.ToUserProfileSettingsDto());
+        }
         [HttpGet("{username}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetProfile(string username)
@@ -65,17 +77,14 @@ namespace sigma_backend.Controllers
             // Return user profile
             return Ok(user.ToUserProfileDto(user.GetProfilePictureUrl(Request, _pathService)));
         }
-        [HttpPut("me")]
-        public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateUserProfileRequestDto updateDto)
+        [HttpPut("me/settings")]
+        public async Task<IActionResult> UpdateMyProfileSettings([FromBody] UpdateUserProfileSettingsRequestDto updateDto)
         {
             // Get the current logged-in user
             var user = await _currentUserService.GetCurrentUserAsync(User);
 
             if (user == null)
                 return Unauthorized();
-
-            // Update user in DB
-            user = await _userRepo.UpdateAsync(user.Id, updateDto.ToUpdateUserRequestDto());
 
             if (user?.Profile == null)
                 return NotFound();
@@ -87,7 +96,7 @@ namespace sigma_backend.Controllers
                 return NotFound();
 
             // Return user profile
-            return Ok(user.ToUserProfileDto(user.GetProfilePictureUrl(Request, _pathService)));
+            return Ok(user.Profile.ToUserProfileSettingsDto());
         }
         [HttpPost("me/picture")]
         public async Task<IActionResult> UploadProfilePicture(IFormFile file)

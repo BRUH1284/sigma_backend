@@ -9,9 +9,9 @@ namespace sigma_backend.Mappers
         {
             return new UserSummaryDto
             {
-                UserName = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                UserName = user.UserName!,
+                FirstName = user.Profile!.FirstName,
+                LastName = user.Profile!.LastName,
                 ProfilePictureUrl = profilePictureUrl
             };
         }
@@ -20,22 +20,31 @@ namespace sigma_backend.Mappers
             return new UserProfileDto
             {
                 UserName = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                FirstName = user.Profile!.FirstName,
+                LastName = user.Profile!.LastName,
                 ProfilePictureUrl = profilePictureUrl,
                 Bio = user.Profile?.Bio,
-                FriendsVisible = user.Profile?.FriendsVisible ?? false,
-                FriendCount = user.Profile?.FriendsVisible ?? false ? user.Friendships.Count : 0,
+                FriendsVisible = user.Profile!.FriendsVisible,
+                FriendCount = user.Profile!.FriendsVisible ? user.Friendships.Count : 0,
                 followersCount = user.Followers.Count,
                 followeeCount = user.Following.Count
             };
         }
-        public static UpdateUserRequestDto ToUpdateUserRequestDto(this UpdateUserProfileRequestDto dto)
+        public static UserProfileSettingsDto ToUserProfileSettingsDto(this UserProfile userProfile)
         {
-            return new UpdateUserRequestDto
+            return new UserProfileSettingsDto
             {
-                FirstName = dto.FirstName,
-                LastName = dto.LastName
+                FirstName = userProfile.FirstName,
+                LastName = userProfile.LastName,
+                Bio = userProfile.Bio,
+                FriendsVisible = userProfile.FriendsVisible,
+                Weight = userProfile.Weight,
+                TargetWeight = userProfile.TargetWeight,
+                Height = userProfile.Height,
+                Gender = userProfile.Gender,
+                ActivityLevel = userProfile.ActivityLevel,
+                UserClimate = userProfile.UserClimate,
+                Goal = userProfile.Goal
             };
         }
     }

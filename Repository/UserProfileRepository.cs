@@ -23,15 +23,24 @@ namespace sigma_backend.Repository
             return profilePicture;
         }
 
-        public async Task<UserProfile?> UpdateAsync(string id, UpdateUserProfileRequestDto updateDto)
+        public async Task<UserProfile?> UpdateAsync(string id, UpdateUserProfileSettingsRequestDto updateDto)
         {
             var existingProfile = await _context.UserProfiles.FindAsync(id);
 
             if (existingProfile == null)
                 return null;
 
+            existingProfile.FirstName = updateDto.FirstName;
+            existingProfile.LastName = updateDto.LastName;
             existingProfile.Bio = updateDto.Bio;
             existingProfile.FriendsVisible = updateDto.FriendsVisible;
+            existingProfile.Weight = updateDto.Weight;
+            existingProfile.TargetWeight = updateDto.TargetWeight;
+            existingProfile.Height = updateDto.Height;
+            existingProfile.Gender = updateDto.Gender;
+            existingProfile.ActivityLevel = updateDto.ActivityLevel;
+            existingProfile.UserClimate = updateDto.UserClimate;
+            existingProfile.Goal = updateDto.Goal;
 
             await _context.SaveChangesAsync();
 

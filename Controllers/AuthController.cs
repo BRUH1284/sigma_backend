@@ -63,8 +63,7 @@ namespace sigma_backend.Controllers
                 // Create a default profile
                 var profile = new UserProfile
                 {
-                    UserId = user.Id,
-                    Bio = $"Welcome to {user.UserName}'s profile!",
+                    UserId = user.Id
                 };
 
                 // Save new profile

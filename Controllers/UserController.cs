@@ -47,21 +47,6 @@ namespace sigma_backend.Controllers
             // Return user summary
             return Ok(user.ToUserSummaryDto(user.GetProfilePictureUrl(Request, _pathService)));
         }
-        [HttpPut("me")]
-        public async Task<IActionResult> Update([FromBody] UpdateUserRequestDto updateDto)
-        {
-            // Get the current logged-in user
-            var user = await _currentUserService.GetCurrentUserAsync(User);
-
-            if (user == null)
-                return Unauthorized();
-
-            // Update DB
-            user = await _userRepo.UpdateAsync(user.Id, updateDto);
-
-            // Return user summary
-            return Ok(user!.ToUserSummaryDto(user!.GetProfilePictureUrl(Request, _pathService)));
-        }
         [HttpGet("search")]
         public async Task<IActionResult> SearchUsers([FromQuery] string query)
         {
