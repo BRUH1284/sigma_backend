@@ -9,6 +9,7 @@ using sigma_backend.Extensions;
 using sigma_backend.Interfaces.Repository;
 using sigma_backend.Interfaces.Service;
 using sigma_backend.Options;
+using sigma_backend.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +57,8 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IFriendRequestService, FriendRequestService>();
 builder.Services.AddScoped<IPathService, PathService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -70,6 +73,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chathub");
 
 app.MapControllers();
 

@@ -6,5 +6,6 @@ namespace sigma_backend.Interfaces.Repository
     public interface IUserRepository
     {
         Task<IEnumerable<User>> SearchByUsernameAsync(string query);
+        Task<User?> GetByUsernameAsync(string username); 
     }
 }

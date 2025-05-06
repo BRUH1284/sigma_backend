@@ -17,5 +17,12 @@ namespace sigma_backend.Repository
                 .Take(10)
                 .ToListAsync();
         }
+
+        public async Task<User?> GetByUsernameAsync(string username)
+        {
+            return await _context.Users
+                .Include(u => u.Profile)
+                .FirstOrDefaultAsync(u => u.UserName == username);
+        }
     }
 }

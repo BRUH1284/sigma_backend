@@ -26,6 +26,7 @@ namespace sigma_backend.Data
         public DbSet<CustomDish> CustomDishes { get; set; }
         public DbSet<CustomDishIngredient> CustomDishIngredients { get; set; }
         public DbSet<DataVersion> DataVersions { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -171,6 +172,20 @@ namespace sigma_backend.Data
             // Configure Data Versions
             builder.Entity<DataVersion>()
                 .HasKey(dv => dv.DataResource);
+
+            // Configure Messages
+            builder.Entity<Message>().HasKey(m => m.Id);
+            builder.Entity<Message>()
+                .Property(m => m.Id)
+                .HasMaxLength(36);
+
+            builder.Entity<Message>()
+                .HasIndex(m => m.SenderUsername)
+                .HasDatabaseName("IX_Messages_SenderUsername");
+
+            builder.Entity<Message>()
+                .HasIndex(m => m.ReceiverUsername)
+                .HasDatabaseName("IX_Messages_ReceiverUsername");
         }
     }
 }
