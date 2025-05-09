@@ -36,7 +36,13 @@ namespace sigma_backend.Repository
 
         public async Task<DateTime?> LastUpdatedAt(DataResource dataResource)
         {
-            return (await _context.DataVersions.FindAsync(dataResource))?.LastUpdatedAt;
+            var dataVersion = await _context.DataVersions.FindAsync(dataResource);
+
+            // If there is no record, create new
+            if (dataVersion == null)
+                dataVersion = await CreateOrUpdate(dataResource);
+
+            return dataVersion.LastUpdatedAt;
         }
     }
 }
