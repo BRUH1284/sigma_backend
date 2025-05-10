@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using sigma_backend.Enums;
 using sigma_backend.Models;
 
 namespace sigma_backend.Data
@@ -27,6 +28,9 @@ namespace sigma_backend.Data
         public DbSet<CustomDishIngredient> CustomDishIngredients { get; set; }
         public DbSet<DataVersion> DataVersions { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<ActivityRecord> ActivityRecords { get; set; }
+        public DbSet<BasicActivityRecord> BasicActivityRecords { get; set; }
+        public DbSet<UserActivityRecord> UserActivityRecords { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -186,6 +190,44 @@ namespace sigma_backend.Data
             builder.Entity<Message>()
                 .HasIndex(m => m.ReceiverUsername)
                 .HasDatabaseName("IX_Messages_ReceiverUsername");
+
+            // Configure Activity Record
+            builder.Entity<ActivityRecord>()
+                .Property(r => r.Id)
+                .HasDefaultValueSql("uuid_generate_v4()");
+
+
+            builder.Entity<ActivityRecord>()
+                .HasIndex(r => new { r.UserId, r.LastModified });
+
+            builder.Entity<ActivityRecord>()
+                .HasIndex(r => new { r.UserId });
+
+            builder.Entity<ActivityRecord>()
+                .HasDiscriminator<RecordType>("Type") // Discriminator column
+                .HasValue<ActivityRecord>(RecordType.Unknown) // Default value
+                .HasValue<BasicActivityRecord>(RecordType.Basic)
+                .HasValue<UserActivityRecord>(RecordType.User);
+
+            builder.Entity<ActivityRecord>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.ActivityRecords) // User has many Activity Records
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete for User -> Activity Records
+
+            // Configure Basic Activity Record
+            builder.Entity<BasicActivityRecord>()
+                .HasOne(b => b.Activity)
+                .WithMany()
+                .HasForeignKey(b => b.ActivityCode)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure User Activity Record
+            builder.Entity<UserActivityRecord>()
+                .HasOne(u => u.UserActivity)
+                .WithMany()
+                .HasForeignKey(u => u.ActivityId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

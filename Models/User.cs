@@ -12,8 +12,6 @@ namespace sigma_backend.Models
         public virtual ICollection<FriendRequest> ReceivedFriendRequests { get; set; } = new List<FriendRequest>();
         public virtual ICollection<Friendship> Friendships { get; set; } = new List<Friendship>();
         public virtual ICollection<UserActivity> Activities { get; set; } = new List<UserActivity>();
-
-        // public virtual ICollection<Comment> Comments { get; set; }
-        // public virtual ICollection<Like> Likes { get; set; }
+        public virtual ICollection<ActivityRecord> ActivityRecords { get; set; } = new List<ActivityRecord>();
     }
 }
