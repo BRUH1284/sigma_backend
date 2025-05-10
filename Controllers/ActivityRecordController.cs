@@ -65,10 +65,24 @@ namespace sigma_backend.Controllers
             if (records.Count == 0)
                 return NoContent();
 
-            // Map the records to DTOs and return them
-            var recordDtos = records.ToActivityRecordDtos();
+            return Ok(records.ToActivityRecordDtos());
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllRecords()
+        {
+            // Get the current logged-in user
+            var user = await _currentUserService.GetCurrentUserAsync(User);
 
-            return Ok(recordDtos);
+            if (user == null)
+                return Unauthorized();
+
+            // Fetch the records for the user
+            var records = await _activityRecordRepo.GetByUserIdAsync(user.Id);
+
+            if (records.Count == 0)
+                return NoContent();
+
+            return Ok(records.ToActivityRecordDtos());
         }
         [HttpPost]
         public async Task<IActionResult> AddRecords([FromBody] List<CreateActivityRecordRequestDto> recordDtos)
