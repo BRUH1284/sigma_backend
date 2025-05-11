@@ -30,5 +30,22 @@ namespace sigma_backend.Repository
                 .OrderBy(m => m.SentAt)
                 .ToListAsync();
         }
+
+        public async Task<Message> GetLastMessageAsync(string currentUsername, string otherUsername)
+        {
+            return await _context.Messages
+                .Where(m => (m.SenderUsername == currentUsername && m.ReceiverUsername == otherUsername) ||
+                            (m.SenderUsername == otherUsername && m.ReceiverUsername == currentUsername))
+                .OrderByDescending(m => m.SentAt)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<IEnumerable<string>> GetConversationUsersAsync(string currentUsername)
+        {
+            return await _context.Messages
+                .Where(m => m.SenderUsername == currentUsername || m.ReceiverUsername == currentUsername)
+                .Select(m => m.SenderUsername == currentUsername ? m.ReceiverUsername : m.SenderUsername)
+                .Distinct()
+                .ToListAsync();
+        }
     }
 }

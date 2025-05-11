@@ -77,5 +77,34 @@ namespace sigma_backend.Controllers
             var messages = await _messageRepository.GetMessagesBetweenUsersAsync(currentUsername, otherUsername);
             return Ok(messages);
         }
+
+        [HttpGet("chats")]
+        public async Task<IActionResult> GetChats()
+        {
+            var currentUsername = User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(currentUsername))
+                return BadRequest("User not found");
+
+            // Получаем пользователей, с которыми есть сообщения
+            var users = await _messageRepository.GetConversationUsersAsync(currentUsername);
+
+            // Для каждого пользователя получаем последнее сообщение
+            var chats = new List<object>();
+            foreach (var user in users)
+            {
+                var lastMessage = await _messageRepository.GetLastMessageAsync(currentUsername, user);
+
+                chats.Add(new
+                {
+                    Username = user,
+                    LastMessage = lastMessage.Content,
+                    SentAt = lastMessage.SentAt
+                });
+            }
+
+            return Ok(chats);
+        }
     }
 }

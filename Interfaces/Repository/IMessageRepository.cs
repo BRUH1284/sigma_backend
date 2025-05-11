@@ -8,5 +8,8 @@ namespace sigma_backend.Interfaces.Repository
     {
         Task<Message> SaveMessage(Message message);
         Task<List<Message>> GetMessagesBetweenUsersAsync(string username1, string username2);
+        Task<Message> GetLastMessageAsync(string currentUsername, string otherUsername);
+        Task<IEnumerable<string>> GetConversationUsersAsync(string currentUsername);
+
     }
 }
