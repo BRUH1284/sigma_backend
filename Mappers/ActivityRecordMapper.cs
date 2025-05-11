@@ -46,7 +46,7 @@ namespace sigma_backend.Mappers
                     UserId = userId,
                     Duration = dto.Duration,
                     Kcal = dto.Kcal,
-                    Time = dto.Time.ToUniversalTime(),
+                    Time = DateTimeOffset.FromUnixTimeSeconds(dto.Time).UtcDateTime,
                     LastModified = lastModified.ToUniversalTime(),
                     Type = RecordType.User,
                     ActivityId = dto.ActivityId.Value
@@ -60,7 +60,7 @@ namespace sigma_backend.Mappers
                     UserId = userId,
                     Duration = dto.Duration,
                     Kcal = dto.Kcal,
-                    Time = dto.Time.ToUniversalTime(),
+                    Time = DateTimeOffset.FromUnixTimeSeconds(dto.Time).UtcDateTime,
                     LastModified = lastModified.ToUniversalTime(),
                     Type = RecordType.Basic,
                     ActivityCode = dto.ActivityCode.Value

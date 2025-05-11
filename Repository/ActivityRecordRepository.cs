@@ -64,7 +64,7 @@ namespace sigma_backend.Repository
             // Update properties of the existing record
             existingRecord.Duration = updateDto.Duration;
             existingRecord.Kcal = updateDto.Kcal;
-            existingRecord.Time = updateDto.Time.ToUniversalTime();
+            existingRecord.Time = DateTimeOffset.FromUnixTimeSeconds(updateDto.Time).UtcDateTime;
             existingRecord.LastModified = DateTime.UtcNow; // Update LastModified time
 
             // Save the changes to the database
