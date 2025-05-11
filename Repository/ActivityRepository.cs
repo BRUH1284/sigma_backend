@@ -26,10 +26,7 @@ namespace sigma_backend.Repository
 
             await _context.Activities.AddAsync(activityModel);
 
-            await _context.SaveChangesAsync();
-
-            // Update data version
-            await _dataVersionRepository.CreateOrUpdate(dataResource);
+            await SaveChangesAsync();
             return activityModel;
         }
 
@@ -42,10 +39,7 @@ namespace sigma_backend.Repository
 
             _context.Activities.Remove(activityModel);
 
-            await _context.SaveChangesAsync();
-
-            // Update data version
-            await _dataVersionRepository.CreateOrUpdate(dataResource);
+            await SaveChangesAsync();
             return activityModel;
         }
 
@@ -70,11 +64,15 @@ namespace sigma_backend.Repository
             existingActivity.MetValue = activityDto.MetValue;
             existingActivity.Description = activityDto.Description;
 
-            await _context.SaveChangesAsync();
-
-            // Update data version
-            await _dataVersionRepository.CreateOrUpdate(dataResource);
+            await SaveChangesAsync();
             return existingActivity;
         }
+        async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+            // Update data version
+            await _dataVersionRepository.CreateOrUpdate(dataResource);
+        }
+
     }
 }
