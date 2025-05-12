@@ -7,5 +7,8 @@ namespace sigma_backend.Interfaces.Repository
     {
         Task<IEnumerable<User>> SearchByUsernameAsync(string query);
         Task<User?> GetByUsernameAsync(string username); 
+        Task SaveExpoToken(string username, string token);
+        Task<List<string>> GetExpoTokens(string username);
+
     }
 }

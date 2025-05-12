@@ -31,7 +31,9 @@ namespace sigma_backend.Data
         public DbSet<ActivityRecord> ActivityRecords { get; set; }
         public DbSet<BasicActivityRecord> BasicActivityRecords { get; set; }
         public DbSet<UserActivityRecord> UserActivityRecords { get; set; }
+        public DbSet<PushToken> PushTokens { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

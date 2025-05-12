@@ -24,5 +24,24 @@ namespace sigma_backend.Repository
                 .Include(u => u.Profile)
                 .FirstOrDefaultAsync(u => u.UserName == username);
         }
+
+        public async Task SaveExpoToken(string username, string token)
+        {
+            var existing = await _context.PushTokens.FirstOrDefaultAsync(t => t.Username == username && t.Token == token);
+            if (existing == null)
+            {
+                _context.PushTokens.Add(new PushToken { Username = username, Token = token });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<List<string>> GetExpoTokens(string username)
+        {
+            return await _context.PushTokens
+                .Where(t => t.Username == username)
+                .Select(t => t.Token)
+                .ToListAsync();
+        }
+
     }
 }
