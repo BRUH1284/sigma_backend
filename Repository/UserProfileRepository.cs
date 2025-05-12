@@ -34,6 +34,7 @@ namespace sigma_backend.Repository
             existingProfile.LastName = updateDto.LastName;
             existingProfile.Bio = updateDto.Bio;
             existingProfile.FriendsVisible = updateDto.FriendsVisible;
+            existingProfile.Age = updateDto.Age;
             existingProfile.Weight = updateDto.Weight;
             existingProfile.TargetWeight = updateDto.TargetWeight;
             existingProfile.Height = updateDto.Height;

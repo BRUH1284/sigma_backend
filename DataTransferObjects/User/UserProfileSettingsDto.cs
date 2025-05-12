@@ -8,6 +8,7 @@ namespace sigma_backend.DataTransferObjects.User
         public required string LastName { get; set; }
         public required string Bio { get; set; }
         public required bool FriendsVisible { get; set; }
+        public required float Age { get; set; }
         public required float Weight { get; set; }
         public required float TargetWeight { get; set; }
         public required float Height { get; set; }

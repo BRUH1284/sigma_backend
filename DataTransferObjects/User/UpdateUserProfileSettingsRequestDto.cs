@@ -14,6 +14,8 @@ namespace sigma_backend.DataTransferObjects.User
         [Required]
         public required bool FriendsVisible { get; set; }
         [Required]
+        public float Age { get; set; }
+        [Required]
         public float Weight { get; set; }
         [Required]
         public float TargetWeight { get; set; }

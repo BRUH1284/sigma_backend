@@ -11,6 +11,7 @@ namespace sigma_backend.Models
         public bool FriendsVisible { get; set; } = true;
         public string? ProfilePictureFileName { get; set; }
         public virtual ICollection<ProfilePicture>? ProfilePictures { get; set; }
+        public float Age { get; set; } = 0;
         public float Weight { get; set; } = 0;
         public float TargetWeight { get; set; } = 0;
         public float Height { get; set; } = 0;

@@ -38,6 +38,7 @@ namespace sigma_backend.Mappers
                 LastName = userProfile.LastName,
                 Bio = userProfile.Bio,
                 FriendsVisible = userProfile.FriendsVisible,
+                Age = userProfile.Age,
                 Weight = userProfile.Weight,
                 TargetWeight = userProfile.TargetWeight,
                 Height = userProfile.Height,
