@@ -8,6 +8,10 @@ using System.Security.Claims;
 
 namespace sigma_backend.Controllers
 {
+
+    /// <summary>
+    /// Handles operations related to meals tracking.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -23,6 +27,11 @@ namespace sigma_backend.Controllers
         }
 
         // POST /api/meals
+        /// <summary>
+        /// Creates a new meal entry for the authenticated user.
+        /// </summary>
+        /// <param name="dto">Meal details including food ID and amount.</param>
+        /// <returns>The created meal record.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateMeal([FromBody] CreateMealDto dto)
         {
@@ -50,6 +59,11 @@ namespace sigma_backend.Controllers
         }
 
         // GET /api/meals/{userId}
+        /// <summary>
+        /// Gets all meal records for a specific user.
+        /// </summary>
+        /// <param name="userId">User ID to retrieve meals for.</param>
+        /// <returns>List of meals.</returns>
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetMeals(string userId)
         {
@@ -62,6 +76,12 @@ namespace sigma_backend.Controllers
         }
 
         // PUT /api/meals/{id}
+        /// <summary>
+        /// Updates an existing meal entry.
+        /// </summary>
+        /// <param name="id">Meal ID.</param>
+        /// <param name="dto">New values for the meal.</param>
+        /// <returns>Updated meal object.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMeal(int id, [FromBody] UpdateMealDto dto)
         {
@@ -75,6 +95,11 @@ namespace sigma_backend.Controllers
         }
 
         // DELETE /api/meals/{id}
+        /// <summary>
+        /// Deletes a meal entry by ID.
+        /// </summary>
+        /// <param name="id">Meal ID to delete.</param>
+        /// <returns>No content if deleted.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMeal(int id)
         {
@@ -88,6 +113,12 @@ namespace sigma_backend.Controllers
         }
 
         // POST /api/meals/{id}/upload
+        /// <summary>
+        /// Uploads a file (e.g. image or receipt) to a meal.
+        /// </summary>
+        /// <param name="id">Meal ID.</param>
+        /// <param name="file">File to upload.</param>
+        /// <returns>Path to the uploaded file.</returns>
         [HttpPost("{id}/upload")]
         public async Task<IActionResult> UploadFile(int id, IFormFile file)
         {
@@ -123,6 +154,11 @@ namespace sigma_backend.Controllers
         }
 
         // GET /api/meals/{id}/file
+        /// <summary>
+        /// Retrieves the file associated with a meal.
+        /// </summary>
+        /// <param name="id">Meal ID.</param>
+        /// <returns>Binary file content.</returns>
         [HttpGet("{id}/file")]
         public async Task<IActionResult> GetFile(int id)
         {
@@ -135,6 +171,12 @@ namespace sigma_backend.Controllers
         }
 
         // GET /api/Meals/summary
+        /// <summary>
+        /// Retrieves daily nutritional summary for a specific user and date.
+        /// </summary>
+        /// <param name="userId">User ID.</param>
+        /// <param name="date">Date to summarize.</param>
+        /// <returns>Nutritional summary for the day.</returns>
         [HttpGet("summary/{userId}")]
         public async Task<IActionResult> GetMealSummary(string userId, [FromQuery] DateTime date)
         {

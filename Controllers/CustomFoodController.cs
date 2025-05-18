@@ -8,6 +8,10 @@ using System.Security.Claims;
 
 namespace sigma_backend.Controllers
 {
+
+    /// <summary>
+    /// API for managing user-defined custom food entries.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -20,6 +24,13 @@ namespace sigma_backend.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Adds a new custom food entry for the current user.
+        /// </summary>
+        /// <param name="dto">Custom food data including nutrition values.</param>
+        /// <returns>The created custom food entry.</returns>
+        /// <response code="200">Returns the newly created food entry.</response>
+        /// <response code="401">If the user is not authenticated.</response>
         [HttpPost]
         public async Task<IActionResult> AddCustomFood([FromBody] CreateCustomFoodDto dto)
         {

@@ -9,6 +9,10 @@ using System.Security.Claims;
 
 namespace sigma_backend.Controllers
 {
+
+    /// <summary>
+    /// Provides search functionality for default and user-defined foods and dishes.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -22,6 +26,16 @@ namespace sigma_backend.Controllers
         }
 
         // GET /api/food/search?query=cheese&page=1&pageSize=10
+        /// <summary>
+        /// Searches for foods by name across standard, custom foods, and custom dishes.
+        /// </summary>
+        /// <param name="query">Search term to look up in food names.</param>
+        /// <param name="page">Page number for pagination (default is 1).</param>
+        /// <param name="pageSize">Number of results per page (default is 10, max 100).</param>
+        /// <returns>A list of matching food items and total count.</returns>
+        /// <response code="200">Returns matching food items.</response>
+        /// <response code="400">If the query string is missing or invalid.</response>
+        /// <response code="401">If the user is not authenticated.</response>
         [HttpGet("search")]
         public async Task<IActionResult> SearchFood([FromQuery] string query, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {

@@ -9,6 +9,10 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Controllers
 {
+
+    /// <summary>
+    /// Controller responsible for handling friendships and friend requests.
+    /// </summary>
     [Route("api/friendships")]
     [Authorize]
     [ApiController]
@@ -35,6 +39,12 @@ namespace sigma_backend.Controllers
             _friendshipRepo = friendshipRepo;
             _pathService = pathService;
         }
+
+        /// <summary>
+        /// Sends a friend request to the specified user.
+        /// </summary>
+        /// <param name="username">The target user's username.</param>
+        /// <returns>Friend request data or error if already sent.</returns>
         [HttpPost("{username}/request")]
         public async Task<IActionResult> SendFriendRequest(string username)
         {
@@ -65,6 +75,11 @@ namespace sigma_backend.Controllers
 
             return Ok(request);
         }
+
+        /// <summary>
+        /// Cancels a previously sent friend request.
+        /// </summary>
+        /// <param name="username">The username of the user to whom the request was sent.</param>
         [HttpDelete("{username}/cancel")]
         public async Task<IActionResult> CancelFriendRequest(string username)
         {
@@ -82,6 +97,11 @@ namespace sigma_backend.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Declines a received friend request.
+        /// </summary>
+        /// <param name="username">The username of the user who sent the request.</param>
         [HttpPost("{username}/decline")]
         public async Task<IActionResult> DeclineFriendRequest(string username)
         {
@@ -99,6 +119,11 @@ namespace sigma_backend.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Accepts a friend request from a specific user.
+        /// </summary>
+        /// <param name="username">The sender of the friend request.</param>
         [HttpGet("sent-requests")]
         public async Task<IActionResult> GetSentRequests()
         {
@@ -114,6 +139,10 @@ namespace sigma_backend.Controllers
 
             return Ok(requests);
         }
+
+        /// <summary>
+        /// Gets a list of friend requests sent by the current user.
+        /// </summary>
         [HttpGet("requests")]
         public async Task<IActionResult> GetReceivedRequests()
         {
@@ -129,6 +158,10 @@ namespace sigma_backend.Controllers
 
             return Ok(requests);
         }
+
+        /// <summary>
+        /// Gets a list of friend requests received by the current user.
+        /// </summary>
         [HttpPost("{username}/accept")]
         public async Task<IActionResult> AcceptFriendRequest(string username)
         {
@@ -148,6 +181,10 @@ namespace sigma_backend.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Gets the current user's friends.
+        /// </summary>
         [HttpGet("/api/profile/me/friends")]
         public async Task<IActionResult> GetFriends()
         {
@@ -159,6 +196,12 @@ namespace sigma_backend.Controllers
 
             return await GetUserFriends(user.UserName, true);
         }
+
+        /// <summary>
+        /// Gets the friends of a specified user.
+        /// </summary>
+        /// <param name="username">The target user's username.</param>
+        /// <param name="force">If true, bypass visibility settings (internal use).</param>
         [HttpGet("/api/profile/{username}/friends")]
         public async Task<IActionResult> GetUserFriends(string username, bool force = false)
         {
@@ -177,6 +220,11 @@ namespace sigma_backend.Controllers
 
             return Ok(friends);
         }
+
+        /// <summary>
+        /// Gets friendship details with a specific user.
+        /// </summary>
+        /// <param name="username">The friend's username.</param>
         [HttpGet("friends/{username}")]
         public async Task<IActionResult> GetFriendship(string username)
         {
@@ -194,6 +242,11 @@ namespace sigma_backend.Controllers
 
             return Ok(friendship.ToFriendshipDto());
         }
+
+        /// <summary>
+        /// Removes a friend.
+        /// </summary>
+        /// <param name="username">The friend's username to remove.</param>
         [HttpDelete("friends/{username}")]
         public async Task<IActionResult> RemoveFriend(string username)
         {

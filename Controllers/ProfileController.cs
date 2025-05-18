@@ -40,6 +40,10 @@ namespace sigma_backend.Controllers
             _pathService = pathService;
             _fileService = fileService;
         }
+
+        /// <summary>
+        /// Get profile of the current authenticated user.
+        /// </summary>
         [HttpGet("me")]
         public async Task<IActionResult> GetMyProfile()
         {
@@ -52,6 +56,10 @@ namespace sigma_backend.Controllers
             // Return user profile
             return Ok(user.ToUserProfileDto(user.GetProfilePictureUrl(Request, _pathService)));
         }
+
+        /// <summary>
+        /// Get profile settings of the current authenticated user.
+        /// </summary>
         [HttpGet("me/settings")]
         public async Task<IActionResult> GetMyProfileSettings()
         {
@@ -64,6 +72,10 @@ namespace sigma_backend.Controllers
             // Return user profile
             return Ok(user.Profile!.ToUserProfileSettingsDto());
         }
+
+        /// <summary>
+        /// Get public profile by username.
+        /// </summary>
         [HttpGet("{username}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetProfile(string username)
@@ -77,6 +89,10 @@ namespace sigma_backend.Controllers
             // Return user profile
             return Ok(user.ToUserProfileDto(user.GetProfilePictureUrl(Request, _pathService)));
         }
+
+        /// <summary>
+        /// Update settings for the current user.
+        /// </summary>
         [HttpPut("me/settings")]
         public async Task<IActionResult> UpdateMyProfileSettings([FromBody] UpdateUserProfileSettingsRequestDto updateDto)
         {
@@ -98,6 +114,10 @@ namespace sigma_backend.Controllers
             // Return user profile
             return Ok(user.Profile.ToUserProfileSettingsDto());
         }
+
+        /// <summary>
+        /// Upload profile picture.
+        /// </summary>
         [HttpPost("me/picture")]
         public async Task<IActionResult> UploadProfilePicture(IFormFile file)
         {
@@ -140,6 +160,10 @@ namespace sigma_backend.Controllers
             var url = _pathService.BuildPublicUrl(Request, path);
             return Created(url, new { Url = url });
         }
+
+        /// <summary>
+        /// Download profile picture by username.
+        /// </summary>
         [HttpGet("{username}/picture")]
         [AllowAnonymous]
         public async Task<IActionResult> DownloadProfilePicture(string username)
@@ -162,6 +186,10 @@ namespace sigma_backend.Controllers
             // Return file if path is valid
             return path == null ? NotFound() : File(_fileService.GetFileStream(path), contentType, fileName);
         }
+
+        /// <summary>
+        /// Download current user's profile picture.
+        /// </summary>
         [HttpGet("me/picture")]
         public async Task<IActionResult> DownloadMyProfilePicture()
         {
@@ -173,6 +201,10 @@ namespace sigma_backend.Controllers
             // Get profile picture by username
             return await DownloadProfilePicture(user.UserName);
         }
+
+        /// <summary>
+        /// Delete profile picture (admin only).
+        /// </summary>
         [HttpDelete("{username}/picture/{fileName}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProfilePicture(string username, string fileName)
@@ -196,6 +228,10 @@ namespace sigma_backend.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Delete current user's profile picture.
+        /// </summary>
         [HttpDelete("me/picture/{fileName}")]
         public async Task<IActionResult> DeleteProfilePicture(string fileName)
         {
@@ -207,6 +243,10 @@ namespace sigma_backend.Controllers
             // Delete profile picture by username
             return await DeleteProfilePicture(user.UserName, fileName);
         }
+
+        /// <summary>
+        /// Follow a user by username.
+        /// </summary>
         [HttpPost("{username}/follow")]
         public async Task<IActionResult> FollowUser(string username)
         {
@@ -232,6 +272,10 @@ namespace sigma_backend.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Unfollow a user by username.
+        /// </summary>
         [HttpPost("{username}/unfollow")]
         public async Task<IActionResult> UnfollowUser(string username)
         {
@@ -254,6 +298,10 @@ namespace sigma_backend.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Get followers of a user by username.
+        /// </summary>
         [HttpGet("{username}/followers")]
         public async Task<IActionResult> GetFollowers(string username)
         {
@@ -269,6 +317,10 @@ namespace sigma_backend.Controllers
 
             return Ok(followersSummaries);
         }
+
+        /// <summary>
+        /// Get followers of current user.
+        /// </summary>
         [HttpGet("me/followers")]
         public async Task<IActionResult> GetMyFollowers()
         {
@@ -280,6 +332,9 @@ namespace sigma_backend.Controllers
             return await GetFollowers(user.UserName);
         }
         // Get Followee
+        /// <summary>
+        /// Get users followed by specified user.
+        /// </summary>
         [HttpGet("{username}/following")]
         public async Task<IActionResult> GetFollowings(string username)
         {
@@ -295,6 +350,10 @@ namespace sigma_backend.Controllers
 
             return Ok(followeeSummaries);
         }
+
+        /// <summary>
+        /// Get users followed by current user.
+        /// </summary>
         [HttpGet("me/following")]
         public async Task<IActionResult> GetMyFollowings()
         {

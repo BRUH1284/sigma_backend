@@ -7,6 +7,10 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Controllers
 {
+
+    /// <summary>
+    /// Controller for managing activity records for authenticated users.
+    /// </summary>
     [Route("api/activity-records")]
     [ApiController]
     public class ActivityRecordController : ControllerBase
@@ -27,6 +31,13 @@ namespace sigma_backend.Controllers
             _currentUserService = currentUserService;
         }
 
+        /// <summary>
+        /// Gets the last update time for the user's activity records.
+        /// </summary>
+        /// <returns>Datetime of the last update.</returns>
+        /// <response code="200">Returns the last updated datetime</response>
+        /// <response code="204">No records exist</response>
+        /// <response code="401">Unauthorized</response>
         [HttpGet("last-update-time")]
         public async Task<IActionResult> GetRecordsLastUpdateTime()
         {
@@ -43,6 +54,15 @@ namespace sigma_backend.Controllers
 
             return Ok(lastUpdatedAt);
         }
+
+        /// <summary>
+        /// Gets records modified after the provided UNIX timestamp.
+        /// </summary>
+        /// <param name="fromEpoch">UNIX timestamp in seconds</param>
+        /// <returns>List of modified activity records</returns>
+        /// <response code="200">Returns modified records</response>
+        /// <response code="204">No records found</response>
+        /// <response code="401">Unauthorized</response>
         [HttpGet("get-modified-from-epoch")]
         public async Task<IActionResult> GetModifiedRecordsFromEpoch([FromQuery] long fromEpoch)
         {
@@ -50,6 +70,15 @@ namespace sigma_backend.Controllers
 
             return await GetModifiedRecordsFromDate(fromDate);
         }
+
+        /// <summary>
+        /// Gets records modified after the specified date.
+        /// </summary>
+        /// <param name="fromDate">UTC datetime</param>
+        /// <returns>List of modified activity records</returns>
+        /// <response code="200">Returns modified records</response>
+        /// <response code="204">No records found</response>
+        /// <response code="401">Unauthorized</response>
         [HttpGet("get-modified-from-date")]
         public async Task<IActionResult> GetModifiedRecordsFromDate([FromQuery] DateTime fromDate)
         {
@@ -67,6 +96,14 @@ namespace sigma_backend.Controllers
 
             return Ok(records.ToActivityRecordDtos());
         }
+
+        /// <summary>
+        /// Gets all activity records for the current user.
+        /// </summary>
+        /// <returns>List of all activity records</returns>
+        /// <response code="200">Returns activity records</response>
+        /// <response code="204">No records exist</response>
+        /// <response code="401">Unauthorized</response>
         [HttpGet]
         public async Task<IActionResult> GetAllRecords()
         {
@@ -84,6 +121,15 @@ namespace sigma_backend.Controllers
 
             return Ok(records.ToActivityRecordDtos());
         }
+
+        /// <summary>
+        /// Adds new activity records for the current user.
+        /// </summary>
+        /// <param name="recordDtos">List of records to add</param>
+        /// <returns>List of created records</returns>
+        /// <response code="201">Records successfully created</response>
+        /// <response code="400">Invalid or duplicate records</response>
+        /// <response code="401">Unauthorized</response>
         [HttpPost]
         public async Task<IActionResult> AddRecords([FromBody] List<CreateActivityRecordRequestDto> recordDtos)
         {
@@ -125,6 +171,14 @@ namespace sigma_backend.Controllers
 
             return CreatedAtAction(nameof(AddRecords), new { count = createdRecordDtos.Count }, createdRecordDtos);
         }
+
+        /// <summary>
+        /// Updates an existing activity record.
+        /// </summary>
+        /// <param name="updateDto">Record update data</param>
+        /// <returns>The updated record</returns>
+        /// <response code="200">Record updated</response>
+        /// <response code="404">Record not found</response>
         [HttpPut]
         public async Task<IActionResult> ModifyRecord([FromBody] UpdateActivityRecordRequestDto updateDto)
         {
@@ -135,6 +189,13 @@ namespace sigma_backend.Controllers
 
             return Ok(record.ToActivityRecordDto());
         }
+
+        /// <summary>
+        /// Deletes an activity record by ID.
+        /// </summary>
+        /// <param name="id">Record ID</param>
+        /// <response code="204">Record deleted</response>
+        /// <response code="404">Record not found</response>
         [HttpDelete]
         public async Task<IActionResult> DeleteRecord(Guid id)
         {

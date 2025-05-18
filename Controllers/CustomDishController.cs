@@ -8,6 +8,10 @@ using System.Security.Claims;
 
 namespace sigma_backend.Controllers
 {
+
+    /// <summary>
+    /// Controller for managing user-created custom dishes.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
@@ -19,7 +23,14 @@ namespace sigma_backend.Controllers
         {
             _context = context;
         }
-
+        
+        /// <summary>
+        /// Adds a new custom dish for the authenticated user.
+        /// </summary>
+        /// <param name="dto">Custom dish data including ingredients.</param>
+        /// <returns>The created custom dish with resolved ingredient names.</returns>
+        /// <response code="200">Dish successfully created.</response>
+        /// <response code="401">Unauthorized if user is not authenticated.</response>
         [HttpPost]
         public async Task<IActionResult> AddCustomDish([FromBody] CreateCustomDishDto dto)
         {

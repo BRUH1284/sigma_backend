@@ -8,6 +8,9 @@ using sigma_backend.Mappers;
 
 namespace sigma_backend.Controllers
 {
+    /// <summary>
+    /// Controller for managing system and user-defined physical activities.
+    /// </summary>
     [Route("api/activity")]
     [ApiController]
     public class ActivityController : ControllerBase
@@ -27,6 +30,10 @@ namespace sigma_backend.Controllers
             _currentUserService = currentUserService;
             _dataVersionRepo = dataVersionRepo;
         }
+
+        /// <summary>
+        /// Returns the timestamp of the last update to the activity dataset.
+        /// </summary>
         [HttpGet("last-update-time")]
         [AllowAnonymous]
         public async Task<IActionResult> GetActivitiesLastUpdateTime()
@@ -38,6 +45,10 @@ namespace sigma_backend.Controllers
 
             return Ok(lastUpdatedAt);
         }
+
+        /// <summary>
+        /// Returns all predefined activities available in the system.
+        /// </summary>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllActivities()
@@ -48,6 +59,11 @@ namespace sigma_backend.Controllers
             return Ok(activityDtos);
         }
 
+        /// <summary>
+        /// Returns a single activity by its numeric code.
+        /// </summary>
+        /// <param name="code">Activity code</param>
+        /// <returns>Activity DTO</returns>
         [HttpGet("{code}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetActivityByCode(int code)
@@ -60,6 +76,11 @@ namespace sigma_backend.Controllers
             return Ok(activity.ToActivityDto());
         }
 
+        /// <summary>
+        /// Creates a new activity (admin only).
+        /// </summary>
+        /// <param name="activityDto">Activity data</param>
+        /// <returns>Created activity</returns>
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateActivity([FromBody] CreateActivityRequestDto activityDto)
@@ -73,7 +94,13 @@ namespace sigma_backend.Controllers
 
             return CreatedAtAction(nameof(GetActivityByCode), new { code = activityModel.Code }, activityModel);
         }
-
+        
+        /// <summary>
+        /// Updates an existing activity (admin only).
+        /// </summary>
+        /// <param name="code">Activity code</param>
+        /// <param name="updateDto">New activity data</param>
+        /// <returns>Updated activity DTO</returns>
         [HttpPut("{code}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateActivity(int code, [FromBody] UpdateActivityRequestDto updateDto)
@@ -86,6 +113,11 @@ namespace sigma_backend.Controllers
             return Ok(activityModel.ToActivityDto());
         }
 
+        /// <summary>
+        /// Deletes an activity by code (admin only).
+        /// </summary>
+        /// <param name="code">Activity code</param>
+        /// <returns>No content if successful</returns>
         [HttpDelete("{code}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteActivity(int code)
@@ -97,6 +129,10 @@ namespace sigma_backend.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Returns a checksum of the user's custom activities.
+        /// </summary>
         [HttpGet("my/checksum")]
         public async Task<IActionResult> GetUserActivitiesChecksum()
         {
@@ -110,6 +146,10 @@ namespace sigma_backend.Controllers
 
             return Ok(new { Checksum = checksum });
         }
+
+        /// <summary>
+        /// Returns all activities created by the current user.
+        /// </summary>
         [HttpGet("my")]
         public async Task<IActionResult> GetAllUserActivities()
         {
@@ -124,6 +164,11 @@ namespace sigma_backend.Controllers
 
             return Ok(userActivityDtos);
         }
+
+        /// <summary>
+        /// Returns a user-created activity by its ID.
+        /// </summary>
+        /// <param name="id">Activity ID (GUID)</param>
         [HttpGet("my/{id}")]
         public async Task<IActionResult> GetUserActivityById(Guid id)
         {
@@ -134,6 +179,11 @@ namespace sigma_backend.Controllers
 
             return Ok(userActivity.ToUserActivityDto());
         }
+
+        /// <summary>
+        /// Creates a new user-defined activity.
+        /// </summary>
+        /// <param name="userActivityDto">Activity data</param>
         [HttpPost("my")]
         public async Task<IActionResult> CreateUserActivity([FromBody] CreateUserActivityRequestDto userActivityDto)
         {
@@ -152,6 +202,12 @@ namespace sigma_backend.Controllers
                 new { id = userActivityModel.Id },
                 userActivityModel.ToUserActivityDto());
         }
+
+        /// <summary>
+        /// Updates an existing user-defined activity.
+        /// </summary>
+        /// <param name="id">Activity ID (GUID)</param>
+        /// <param name="updateDto">Updated activity data</param>
         [HttpPut("my/{id}")]
         public async Task<IActionResult> UpdateUserActivity(Guid id, [FromBody] UpdateActivityRequestDto updateDto)
         {
@@ -162,6 +218,11 @@ namespace sigma_backend.Controllers
 
             return Ok(userActivityModel.ToUserActivityDto());
         }
+
+        /// <summary>
+        /// Deletes a user-defined activity by its ID.
+        /// </summary>
+        /// <param name="id">Activity ID (GUID)</param>
         [HttpDelete("my/{id}")]
         public async Task<IActionResult> DeleteUserActivity(Guid id)
         {

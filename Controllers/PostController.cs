@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace sigma_backend.Controllers
 {
+    /// <summary>
+    /// Controller for handling user posts.
+    /// </summary>
     [Route("api/posts")]
     [Authorize]
     [ApiController]
@@ -36,6 +39,11 @@ namespace sigma_backend.Controllers
             _fileService = fileService;
         }
 
+        /// <summary>
+        /// Creates a new post with optional image uploads.
+        /// </summary>
+        /// <param name="createPostDto">DTO containing post content and image files.</param>
+        /// <returns>Created post with metadata and image URLs.</returns>
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreatePost([FromForm] CreatePostDto createPostDto)
@@ -90,6 +98,11 @@ namespace sigma_backend.Controllers
                 post.ToPostDto(userSummaryDto, imageUrls)
             );
         }
+        
+        /// <summary>
+        /// Returns the posts of the currently authenticated user.
+        /// </summary>
+        /// <returns>List of posts.</returns>
         [HttpGet("/api/profiles/me/posts")]
         public async Task<IActionResult> GetMyPosts()
         {
@@ -102,6 +115,12 @@ namespace sigma_backend.Controllers
             // Return user posts
             return await GetUserPosts(user.UserName);
         }
+        
+        /// <summary>
+        /// Returns posts of a specified user by username.
+        /// </summary>
+        /// <param name="username">Username of the profile owner.</param>
+        /// <returns>List of posts for the specified user.</returns>
         [HttpGet("/api/profiles/{username}/posts")]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserPosts(string username)
@@ -124,6 +143,12 @@ namespace sigma_backend.Controllers
 
             return Ok(postDtos);
         }
+
+        /// <summary>
+        /// Retrieves a single post by ID.
+        /// </summary>
+        /// <param name="id">ID of the post to retrieve.</param>
+        /// <returns>The specified post, if it exists.</returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetPostById(int id)
@@ -135,6 +160,12 @@ namespace sigma_backend.Controllers
 
             return Ok(GetPostDto(post));
         }
+        
+        /// <summary>
+        /// Deletes a post by its ID. Admins can delete any post, users can delete their own.
+        /// </summary>
+        /// <param name="id">ID of the post to delete.</param>
+        /// <returns>No content if deleted, 401 or 404 otherwise.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePostById(int id)
         {
@@ -160,6 +191,12 @@ namespace sigma_backend.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Builds and returns a PostDto including image URLs.
+        /// </summary>
+        /// <param name="post">Post entity to convert.</param>
+        /// <returns>A fully constructed PostDto.</returns>
         private PostDto GetPostDto(Post post)
         {
             if (post?.User?.UserName == null)

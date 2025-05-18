@@ -10,6 +10,10 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Controllers
 {
+
+    /// <summary>
+    /// Controller for authorization.
+    /// </summary>
     [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -36,6 +40,14 @@ namespace sigma_backend.Controllers
             _currentUserService = currentUserService;
         }
 
+        /// <summary>
+        /// Logs in an existing user.
+        /// </summary>
+        /// <param name="loginDto">Login credentials (username, password, device ID).</param>
+        /// <returns>Returns access and refresh tokens.</returns>
+        /// <response code="200">Login successful</response>
+        /// <response code="400">Validation error</response>
+        /// <response code="401">Unauthorized (wrong credentials)</response>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
@@ -81,6 +93,14 @@ namespace sigma_backend.Controllers
             }
         }
 
+        /// <summary>
+        /// Logs in an existing user.
+        /// </summary>
+        /// <param name="loginDto">Login credentials (username, password, device ID).</param>
+        /// <returns>Returns access and refresh tokens.</returns>
+        /// <response code="200">Login successful</response>
+        /// <response code="400">Validation error</response>
+        /// <response code="401">Unauthorized (wrong credentials)</response>
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
@@ -105,6 +125,14 @@ namespace sigma_backend.Controllers
             // Return tokens
             return Ok(await GetTokenDto(user, roles, loginDto.DeviceId));
         }
+
+        /// <summary>
+        /// Logs out from a specific device.
+        /// </summary>
+        /// <param name="dto">Device ID for logout</param>
+        /// <returns>No content if successful</returns>
+        /// <response code="204">Successfully logged out</response>
+        /// <response code="401">Unauthorized</response>
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout([FromBody] LogoutDto dto)
@@ -122,6 +150,13 @@ namespace sigma_backend.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Logs out from all devices (removes all refresh tokens).
+        /// </summary>
+        /// <returns>No content if successful</returns>
+        /// <response code="204">Successfully logged out from all devices</response>
+        /// <response code="401">Unauthorized</response>
         [HttpPost("logout-all")]
         [Authorize]
         public async Task<IActionResult> LogoutAll()
@@ -139,7 +174,14 @@ namespace sigma_backend.Controllers
 
             return NoContent();
         }
-
+        
+        /// <summary>
+        /// Refreshes access and refresh tokens using existing ones.
+        /// </summary>
+        /// <param name="tokenRequest">Refresh token and old access token with device ID</param>
+        /// <returns>Returns new access and refresh tokens.</returns>
+        /// <response code="200">Token refreshed</response>
+        /// <response code="401">Invalid token or user not found</response>
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequestDto tokenRequest)
         {

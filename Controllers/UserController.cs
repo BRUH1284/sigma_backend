@@ -10,6 +10,9 @@ using sigma_backend.Models;
 
 namespace sigma_backend.Controllers
 {
+    /// <summary>
+    /// Controller for managing users.
+    /// </summary>
     [Route("api/users")]
     [Authorize]
     [ApiController]
@@ -35,6 +38,13 @@ namespace sigma_backend.Controllers
             _fileService = fileService;
             _pathService = pathService;
         }
+
+        /// <summary>
+        /// Gets the summary information of the currently authenticated user.
+        /// </summary>
+        /// <returns>User summary data</returns>
+        /// <response code="200">Returns the user summary</response>
+        /// <response code="401">User is not authenticated</response>
         [HttpGet("me")]
         public async Task<IActionResult> GetMySummary()
         {
@@ -47,6 +57,14 @@ namespace sigma_backend.Controllers
             // Return user summary
             return Ok(user.ToUserSummaryDto(user.GetProfilePictureUrl(Request, _pathService)));
         }
+
+        /// <summary>
+        /// Searches users by partial username match.
+        /// </summary>
+        /// <param name="query">Username search query</param>
+        /// <returns>List of matched user summaries</returns>
+        /// <response code="200">Returns a list of users</response>
+        /// <response code="400">If query is empty</response>
         [HttpGet("search")]
         public async Task<IActionResult> SearchUsers([FromQuery] string query)
         {
@@ -59,6 +77,14 @@ namespace sigma_backend.Controllers
 
             return Ok(result);
         }
+
+        /// <summary>
+        /// Gets the summary of a user by username.
+        /// </summary>
+        /// <param name="username">Username of the user</param>
+        /// <returns>User summary</returns>
+        /// <response code="200">User found</response>
+        /// <response code="404">User not found</response>
         [HttpGet("{username}")]
         public async Task<IActionResult> GetSummary(string username)
         {
@@ -70,6 +96,12 @@ namespace sigma_backend.Controllers
             // Return user summary
             return Ok(user.ToUserSummaryDto(user.GetProfilePictureUrl(Request, _pathService)));
         }
+
+        /// <summary>
+        /// Deletes the currently authenticated user's account.
+        /// </summary>
+        /// <response code="204">User deleted</response>
+        /// <response code="401">User not authenticated</response>
         [HttpDelete("me")]
         public async Task<IActionResult> DeleteMe()
         {
@@ -82,6 +114,13 @@ namespace sigma_backend.Controllers
             // Delete user by username
             return await DeleteUser(user.UserName);
         }
+
+        /// <summary>
+        /// Deletes a user account by username. Only accessible by Admins.
+        /// </summary>
+        /// <param name="username">Username of the user to delete</param>
+        /// <response code="204">User deleted</response>
+        /// <response code="404">User not found</response>
         [HttpDelete("{username}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(string username)

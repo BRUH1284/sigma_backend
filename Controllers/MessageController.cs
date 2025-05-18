@@ -12,6 +12,10 @@ using System.Security.Claims;
 
 namespace sigma_backend.Controllers
 {
+
+    /// <summary>
+    /// Handles messaging features between users, including chat history and real-time messages.
+    /// </summary>
     [Route("api/messages")]
     [Authorize]
     [ApiController]
@@ -28,6 +32,11 @@ namespace sigma_backend.Controllers
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Sends a message from the authenticated user to the specified receiver.
+        /// </summary>
+        /// <param name="dto">Message content and receiver username.</param>
+        /// <returns>Status of the operation.</returns>
         [HttpPost]
         public async Task<IActionResult> SendMessage([FromBody] SendMessageDto dto)
         {
@@ -65,6 +74,11 @@ namespace sigma_backend.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Gets the full conversation between the authenticated user and another user.
+        /// </summary>
+        /// <param name="otherUsername">Username of the conversation partner.</param>
+        /// <returns>List of messages exchanged.</returns>
         [HttpGet("conversation/{otherUsername}")]
         public async Task<IActionResult> GetConversation(string otherUsername)
         {
@@ -78,6 +92,10 @@ namespace sigma_backend.Controllers
             return Ok(messages);
         }
 
+        /// <summary>
+        /// Gets all chat partners with the last message exchanged.
+        /// </summary>
+        /// <returns>List of chat previews.</returns>
         [HttpGet("chats")]
         public async Task<IActionResult> GetChats()
         {

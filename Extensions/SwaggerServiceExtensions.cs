@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace sigma_backend.Extensions
 {
@@ -8,7 +9,12 @@ namespace sigma_backend.Extensions
         {
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Sigma API", Version = "v1" });
+
+                // 💡 Подключение XML-комментариев
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                option.IncludeXmlComments(xmlPath); 
 
                 option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
